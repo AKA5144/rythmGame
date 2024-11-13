@@ -49,25 +49,28 @@ public class Accuracy : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.V) || Input.GetKeyDown(KeyCode.N))
         {
+            Debug.Log("hit");
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D[] hits = Physics2D.RaycastAll(mousePosition, Vector2.zero);
-
-            if (hits.Length == 1)
+            if (hits[0].collider != null && hits[0].collider.gameObject == circle)
             {
-                if (hits[0].collider != null && hits[0].collider.gameObject == circle)
-                {
-                    checkAccuracy();
-                }
+                checkAccuracy();
             }
-            else if (hits.Length > 1)
-            {
-                Destroy(gameObject);
-                if (IsOldestGameObject(hits))
-                {
-                    //checkAccuracy();
-                }
+            /* if (hits.Length == 1)
+             {
+                 if (hits[0].collider != null && hits[0].collider.gameObject == circle)
+                 {
+                     checkAccuracy();
+                 }
+             }
+             else if (hits.Length > 1)
+             {
+                 if (IsOldestGameObject(hits))
+                 {
+                     checkAccuracy();
+                 }
 
-            }
+             }*/
 
         }
     }
