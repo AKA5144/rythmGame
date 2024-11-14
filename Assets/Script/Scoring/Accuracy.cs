@@ -14,10 +14,6 @@ public class Accuracy : MonoBehaviour
 
     public GameObject OutlineCircle;
 
-    public GameObject ObjectParent;
-
-    public CheckHierarchie hierarchie;
-
     public FadingOutline fading;
 
     public bool isClicked;
@@ -37,66 +33,14 @@ public class Accuracy : MonoBehaviour
 
     private void Update()
     {
-        // checkAccuracy();
-        DetectClickOnCircle();
         AccuracyAnimation();
         if (OutlineCircle.transform.localScale.x < 0.4 && !isClicked)
         {
             InitiateDestroy(0);
         }
     }
-    private void DetectClickOnCircle()
-    {
-        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.V) || Input.GetKeyDown(KeyCode.N))
-        {
-            Debug.Log("hit");
-            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D[] hits = Physics2D.RaycastAll(mousePosition, Vector2.zero);
-            if (hits[0].collider != null && hits[0].collider.gameObject == circle)
-            {
-                checkAccuracy();
-            }
-            /* if (hits.Length == 1)
-             {
-                 if (hits[0].collider != null && hits[0].collider.gameObject == circle)
-                 {
-                     checkAccuracy();
-                 }
-             }
-             else if (hits.Length > 1)
-             {
-                 if (IsOldestGameObject(hits))
-                 {
-                     checkAccuracy();
-                 }
 
-             }*/
-
-        }
-    }
-    bool IsOldestGameObject(RaycastHit2D[] hits)
-    {
-        GameObject oldestObject = null;
-        int oldestIndex = int.MaxValue;
-
-        foreach (RaycastHit2D hit in hits)
-        {
-            GameObject obj = hit.collider.gameObject.transform.parent.gameObject;
-            int siblingIndex = obj.transform.GetSiblingIndex();
-
-            if (siblingIndex < oldestIndex)
-            {
-                oldestIndex = siblingIndex;
-                oldestObject = obj;
-            }
-        }
-        if (oldestObject == gameObject)
-        {
-            return true;
-        }
-        return false;
-    }
-    private void checkAccuracy()
+    public void checkAccuracy()
     {
         if (OutlineCircle.transform.localScale.x > 2)
         {
