@@ -34,10 +34,19 @@ public class CircleManager : MonoBehaviour
                         circleScript.checkAccuracy();
                     }
                 }
+                else if (hits[0].collider != null && hits[0].collider.tag == "SliderCircle")
+                {
+                    BeginSlider circleScript = hits[0].collider.gameObject.transform.parent.gameObject.GetComponent<BeginSlider>();
+                    if (circleScript != null)
+                    {
+                        circleScript.checkAccuracy();
+                    }
+                }
             }
             else if (hits.Length > 1)
             {
                    GameObject circleToDestroy = GetOldestGameObject(hits);
+
                 Accuracy circleScript = circleToDestroy.GetComponent<Accuracy>();
                 if (circleScript != null)
                 {

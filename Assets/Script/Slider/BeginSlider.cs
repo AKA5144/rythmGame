@@ -17,6 +17,7 @@ public class BeginSlider : MonoBehaviour
     [SerializeField] private List<Sprite> AccSprite;
     private SpriteRenderer accuracyRenderer;
     public GameObject AccuracyGo;
+    public GameObject CircleToMove;
     private float initPosYAccuracy;
     void Start()
     {
@@ -43,7 +44,7 @@ public class BeginSlider : MonoBehaviour
         {
             if (Input.GetMouseButton(0))
             {
-                Debug.Log("good");
+              //  Debug.Log("good");
             }
             else
             {
@@ -52,9 +53,9 @@ public class BeginSlider : MonoBehaviour
         }
         if (isMoving && lineRenderer != null && lineRenderer.positionCount > 1)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
+            CircleToMove.transform.position = Vector3.MoveTowards(CircleToMove.transform.position, targetPosition, speed * Time.deltaTime);
 
-            if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+            if (Vector3.Distance(CircleToMove.transform.position, targetPosition) < 0.1f)
             {
                 currentPointIndex++;
                 if (currentPointIndex >= lineRenderer.positionCount)
@@ -85,13 +86,6 @@ public class BeginSlider : MonoBehaviour
     {
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero);
-        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.V) || Input.GetKeyDown(KeyCode.N))
-        {
-            if (hit.collider != null && hit.collider.gameObject == gameObject && !isClicked)
-            {
-                checkAccuracy();
-            }
-        }
         if (isMoving)
         {
             if (hit.collider != null && hit.collider.gameObject == gameObject)
@@ -107,36 +101,39 @@ public class BeginSlider : MonoBehaviour
 
     public void checkAccuracy()
     {
-        if (OutlineCircle.transform.localScale.x > 2)
+        if (!isClicked)
         {
-        }
-        else if (OutlineCircle.transform.localScale.x < 2 && OutlineCircle.transform.localScale.x > 1.7)
-        {
-            InitiateDestroy(0);
-        }
-        else if (OutlineCircle.transform.localScale.x < 1.7 && OutlineCircle.transform.localScale.x > 1.5)
-        {
-            InitiateDestroy(1);
-        }
-        else if (OutlineCircle.transform.localScale.x < 1.5 && OutlineCircle.transform.localScale.x > 1.3)
-        {
-            InitiateDestroy(2);
-        }
-        else if (OutlineCircle.transform.localScale.x < 1.3 && OutlineCircle.transform.localScale.x > 1)
-        {
-            InitiateDestroy(3);
-        }
-        else if (OutlineCircle.transform.localScale.x < 1 && OutlineCircle.transform.localScale.x > 0.8)
-        {
-            InitiateDestroy(2);
-        }
-        else if (OutlineCircle.transform.localScale.x < 0.8 && OutlineCircle.transform.localScale.x > 0.7)
-        {
-            InitiateDestroy(1);
-        }
-        else if (OutlineCircle.transform.localScale.x < 0.7)
-        {
-            InitiateDestroy(0);
+            if (OutlineCircle.transform.localScale.x > 2)
+            {
+            }
+            else if (OutlineCircle.transform.localScale.x < 2 && OutlineCircle.transform.localScale.x > 1.7)
+            {
+                InitiateDestroy(0);
+            }
+            else if (OutlineCircle.transform.localScale.x < 1.7 && OutlineCircle.transform.localScale.x > 1.5)
+            {
+                InitiateDestroy(1);
+            }
+            else if (OutlineCircle.transform.localScale.x < 1.5 && OutlineCircle.transform.localScale.x > 1.3)
+            {
+                InitiateDestroy(2);
+            }
+            else if (OutlineCircle.transform.localScale.x < 1.3 && OutlineCircle.transform.localScale.x > 1)
+            {
+                InitiateDestroy(3);
+            }
+            else if (OutlineCircle.transform.localScale.x < 1 && OutlineCircle.transform.localScale.x > 0.8)
+            {
+                InitiateDestroy(2);
+            }
+            else if (OutlineCircle.transform.localScale.x < 0.8 && OutlineCircle.transform.localScale.x > 0.7)
+            {
+                InitiateDestroy(1);
+            }
+            else if (OutlineCircle.transform.localScale.x < 0.7)
+            {
+                InitiateDestroy(0);
+            }
         }
     }
     private void InitiateDestroy(int index)
