@@ -223,7 +223,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &300045190
 Transform:
   m_ObjectHideFlags: 0
@@ -817,15 +817,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lineRenderer: {fileID: 1228325216}
   speed: 5
+  CircleToMove: {fileID: 0}
   Outline: {fileID: 2129193883}
   OutlineCircle: {fileID: 2129193883}
+  fading: {fileID: 0}
   AccSprite:
   - {fileID: 413248917955918174, guid: df7fd4e4d2307404fafd07fc9c8de490, type: 3}
   - {fileID: -6830913488730230067, guid: dcc9cb2e0dc962e488760b76607c1966, type: 3}
   - {fileID: 5060403817557101333, guid: 18020d69cf703db408769f687a911401, type: 3}
   - {fileID: 7746256912627332701, guid: d8d97904ac0cefc44812780d2e5f58ce, type: 3}
   AccuracyGo: {fileID: 139847647}
-  CircleToMove: {fileID: 0}
 --- !u!212 &1167418876
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -894,9 +895,10 @@ GameObject:
   - component: {fileID: 1228325218}
   - component: {fileID: 1228325217}
   - component: {fileID: 1228325219}
+  - component: {fileID: 1228325220}
   m_Layer: 0
   m_Name: Slider
-  m_TagString: Untagged
+  m_TagString: SliderCircle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1038,7 +1040,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22030ddb699813a4ab7bedbb477cc530, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BeginSize: {x: 2.6, y: 2.6, z: 0}
+  BeginSize: {x: 2.4, y: 2.4, z: 0}
   Outline: {fileID: 2129193884}
   Circle: {fileID: 1167418872}
   CircleRenderer: {fileID: 1167418876}
@@ -1073,16 +1075,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lineRenderer: {fileID: 1228325216}
-  speed: 5
+  speed: 10
+  CircleToMove: {fileID: 1167418872}
   Outline: {fileID: 2129193883}
   OutlineCircle: {fileID: 2129193883}
+  fading: {fileID: 1228325220}
   AccSprite:
   - {fileID: 413248917955918174, guid: df7fd4e4d2307404fafd07fc9c8de490, type: 3}
   - {fileID: -6830913488730230067, guid: dcc9cb2e0dc962e488760b76607c1966, type: 3}
   - {fileID: 5060403817557101333, guid: 18020d69cf703db408769f687a911401, type: 3}
   - {fileID: 5920072311633242221, guid: d281ef9901ef3eb4ba2d142220cb388f, type: 3}
   AccuracyGo: {fileID: 139847647}
-  CircleToMove: {fileID: 1167418872}
+--- !u!114 &1228325220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1228325214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 955d420230a22f149850cc220949e97c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 2.5
+  fadeSpeed: 10
+  circle: {fileID: 1167418876}
 --- !u!1 &1475819231
 GameObject:
   m_ObjectHideFlags: 0
@@ -1332,8 +1350,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1228325215}
   - {fileID: 300045190}
+  - {fileID: 1228325215}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1892232592

@@ -12,11 +12,7 @@ public class Slider : MonoBehaviour
     void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
-        lineRenderer.positionCount = (points.Length - 1) * segmentCount + 1; 
-    }
-
-    void Update()
-    {
+        lineRenderer.positionCount = (points.Length - 1) * segmentCount + 1;
         if (points.Length >= 2)
         {
             Vector3[] curvePoints = GenerateCatmullRomCurve(points, segmentCount);
@@ -28,6 +24,11 @@ public class Slider : MonoBehaviour
         {
             Debug.LogWarning("Il faut au moins deux points pour créer une courbe.");
         }
+    }
+
+    void Update()
+    {
+
     }
 
     Vector3[] GenerateCatmullRomCurve(Transform[] points, int segments)

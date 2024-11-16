@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,18 +8,25 @@ public class BeginSlider : MonoBehaviour
 {
     public LineRenderer lineRenderer;
     public float speed = 5f;
+    public GameObject CircleToMove;
+    public GameObject Outline;
+    public GameObject OutlineCircle;
+    public FadingOutline fading;
+    [SerializeField] private List<Sprite> AccSprite;
 
     private int currentPointIndex = 0;
     private Vector3 targetPosition;
     private bool isMoving = false;
     private bool isClicked = false;
-    public GameObject Outline;
-    public GameObject OutlineCircle;
-    [SerializeField] private List<Sprite> AccSprite;
     private SpriteRenderer accuracyRenderer;
     public GameObject AccuracyGo;
-    public GameObject CircleToMove;
     private float initPosYAccuracy;
+    private bool isAtEnd = false;
+
+    private int currentSegment = 0;
+    private float progress = 0f;
+
+
     void Start()
     {
         accuracyRenderer = AccuracyGo.GetComponent<SpriteRenderer>();
@@ -27,19 +35,18 @@ public class BeginSlider : MonoBehaviour
 
     public void StartSlider()
     {
-        if (!isMoving && !isClicked)
+        if (!isMoving && !isClicked && !isAtEnd)
         {
             transform.position = lineRenderer.GetPosition(0);
             currentPointIndex = 1;
             targetPosition = lineRenderer.GetPosition(currentPointIndex);
-
+           
         }
-
+     
     }
 
     void Update()
     {
-        DetectClickOnCircle();
         if (isMoving && isClicked)
         {
             if (Input.GetMouseButton(0))
@@ -51,51 +58,36 @@ public class BeginSlider : MonoBehaviour
                 accuracyRenderer.sprite = AccSprite[0];
             }
         }
-        if (isMoving && lineRenderer != null && lineRenderer.positionCount > 1)
-        {
-            CircleToMove.transform.position = Vector3.MoveTowards(CircleToMove.transform.position, targetPosition, speed * Time.deltaTime);
+        if (lineRenderer != null && lineRenderer.positionCount > 1 && CircleToMove != null && !isAtEnd && isClicked)
+        {            
+            Vector3 startPosition = lineRenderer.GetPosition(currentSegment);
+            Vector3 endPosition = lineRenderer.GetPosition(currentSegment + 1);
 
-            if (Vector3.Distance(CircleToMove.transform.position, targetPosition) < 0.1f)
+            progress += speed * Time.deltaTime / Vector3.Distance(startPosition, endPosition);
+
+            CircleToMove.transform.position = Vector3.Lerp(startPosition, endPosition, progress);
+
+            if (progress >= 1f)
             {
-                currentPointIndex++;
-                if (currentPointIndex >= lineRenderer.positionCount)
+                progress = 0f;
+                currentSegment++;
+
+                if (currentSegment >= lineRenderer.positionCount - 1)
                 {
-                    initPosYAccuracy = AccuracyGo.transform.position.y;
-                    isMoving = false;
-                }
-                else
-                {
-                    targetPosition = lineRenderer.GetPosition(currentPointIndex);
+                    initPosYAccuracy = CircleToMove.transform.position.y;
+                    isAtEnd = true;
                 }
             }
+        }
+
+        if (isAtEnd)
+        {
+            isMoving = false;
+            AccuracyAnimation();
         }
         if (Outline.transform.localScale.x < 0.4 && !isMoving && !isClicked)
         {
             InitiateDestroy(0);
-        }
-
-        if (!isMoving && isClicked)
-        {
-
-            AccuracyAnimation();
-        }
-    }
-
-
-    private void DetectClickOnCircle()
-    {
-        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero);
-        if (isMoving)
-        {
-            if (hit.collider != null && hit.collider.gameObject == gameObject)
-            {
-
-            }
-            else
-            {
-
-            }
         }
     }
 
@@ -146,11 +138,12 @@ public class BeginSlider : MonoBehaviour
     {
         if (isClicked)
         {
-            gameObject.GetComponent<CircleCollider2D>().enabled = false;
+            fading.animExit();
+            CircleToMove.GetComponent<CircleCollider2D>().enabled = false;
             Vector3 pos = AccuracyGo.transform.position;
             pos.y += Time.deltaTime * 0.5f;
             AccuracyGo.transform.position = pos;
-            if (pos.y > initPosYAccuracy + 0.5f)
+            if (pos.y > initPosYAccuracy + 2f)
             {
                 Destroy(gameObject.transform.parent.gameObject);
             }

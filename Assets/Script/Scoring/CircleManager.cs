@@ -6,7 +6,7 @@ using UnityEngine.UIElements.Experimental;
 
 public class CircleManager : MonoBehaviour
 {
-  
+
     private GameObject OutlineCircle;
     private float initPosYAccuracy;
     void Start()
@@ -45,13 +45,26 @@ public class CircleManager : MonoBehaviour
             }
             else if (hits.Length > 1)
             {
-                   GameObject circleToDestroy = GetOldestGameObject(hits);
-
-                Accuracy circleScript = circleToDestroy.GetComponent<Accuracy>();
-                if (circleScript != null)
+                GameObject circleToDestroy = GetOldestGameObject(hits);
+                if (circleToDestroy.tag == "SliderCircle")
                 {
-                    circleScript.checkAccuracy();
+                    BeginSlider circleScript = circleToDestroy.GetComponent<BeginSlider>();
+
+                    if (circleScript != null)
+                    {
+                        circleScript.checkAccuracy();
+                    }
                 }
+                else
+                {
+                    Accuracy circleScript = circleToDestroy.GetComponent<Accuracy>();
+
+                    if (circleScript != null)
+                    {
+                        circleScript.checkAccuracy();
+                    }
+                }
+
             }
 
         }
