@@ -8,6 +8,7 @@ public class ShrinkAR : MonoBehaviour
     [SerializeField] SpriteRenderer CircleRenderer;
     [SerializeField] float AR;
     private Vector3 shrink;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -15,6 +16,8 @@ public class ShrinkAR : MonoBehaviour
         Outline.localScale = BeginSize;
         BeginSize.x = transform.localScale.x * 2.5f;
         BeginSize.y = transform.localScale.y * 2.5f;
+
+        
     }
 
     // Update is called once per frame
@@ -40,21 +43,5 @@ public class ShrinkAR : MonoBehaviour
             Outline.localScale = shrink;
         }
 
-    }
-
-    void FadeOutCircle()
-    {
-
-        Color temp = CircleRenderer.color;
-        if (temp.a > 0)
-        {
-
-            temp.a = CircleRenderer.color.a - Time.deltaTime * AR * 1.5f;
-            CircleRenderer.color = temp;
-        }
-        else
-        {
-         //    Destroy(gameObject);
-        }
     }
 }

@@ -38,6 +38,10 @@ public class Accuracy : MonoBehaviour
         {
             InitiateDestroy(0);
         }
+        if (OutlineCircle.transform.localScale.x < 1.3 && OutlineCircle.transform.localScale.x > 1)
+        {
+            Debug.Log(Time.time);
+        }
     }
 
     public void checkAccuracy()
