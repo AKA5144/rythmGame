@@ -1,8 +1,8 @@
-using System;
+using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
-using UnityEngine.UIElements.Experimental;
+using System.Globalization;
+using System;
 
 public class Accuracy : MonoBehaviour
 {
@@ -18,12 +18,16 @@ public class Accuracy : MonoBehaviour
 
     public bool isClicked;
 
+    public AudioSource audioSource;
+
     private SpriteRenderer accuracyRenderer;
 
+    private bool SoundPlayed = false;
 
     private float initPosYAccuracy;
     void Start()
     {
+        
         accuracyRenderer = AccuracyGo.GetComponent<SpriteRenderer>();
         initPosYAccuracy = AccuracyGo.transform.position.y;
         //  LoadImageAndApplyToSprite(imagePath);
@@ -38,12 +42,21 @@ public class Accuracy : MonoBehaviour
         {
             InitiateDestroy(0);
         }
-        if (OutlineCircle.transform.localScale.x < 1.3 && OutlineCircle.transform.localScale.x > 1)
-        {
-            Debug.Log(Time.time);
-        }
+        AutoPlay();
     }
 
+    public void AutoPlay()
+    {
+
+        if (OutlineCircle.transform.localScale.x < 1 && !SoundPlayed)
+        {
+            Debug.Log(Time.time - 2);
+            audioSource.Play();
+            InitiateDestroy(0);   
+            SoundPlayed = true;
+            accuracyRenderer.sprite = AccSprite[3];
+        }
+    }
     public void checkAccuracy()
     {
         if (OutlineCircle.transform.localScale.x > 2)

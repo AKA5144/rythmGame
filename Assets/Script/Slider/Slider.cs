@@ -5,12 +5,18 @@ using UnityEngine.UI;
 public class Slider : MonoBehaviour
 {
     public Transform[] points; 
+    public GameObject PointsParent;
     public int segmentCount = 20; 
     private LineRenderer lineRenderer;
     public BeginSlider begin;
     
     void Start()
     {
+        points = new Transform[PointsParent.transform.childCount];
+        for (int i = 0; i < PointsParent.transform.childCount; i++)
+        {
+            points[i] = PointsParent.transform.GetChild(i);
+        }
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = (points.Length - 1) * segmentCount + 1;
         if (points.Length >= 2)
