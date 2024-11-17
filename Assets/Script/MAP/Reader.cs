@@ -11,12 +11,15 @@ public class Reader : MonoBehaviour
     public int fps;
     public float AR;
     public PlayMusic music;
+    public Transform ParentTransform;
+    public float offset;
 
     private float timeBetweenBeat;
     private float timeAccumulator = 0f;
     private float lastBeatTime = 0f;
     private float timeToReachOne;
     private float playOffsetMap;
+    
 
     public struct PositionData
     {
@@ -40,6 +43,7 @@ public class Reader : MonoBehaviour
         lastBeatTime = Time.time;
         ReadDataFromFile();
         timeToReachOne = (2.5f - 1) / (AR * 0.5f);
+        timeToReachOne = timeToReachOne - offset;
 
     }
 
@@ -56,7 +60,10 @@ public class Reader : MonoBehaviour
             playOffsetMap += Time.deltaTime;
             if(dataList.Count > 0 && playOffsetMap + timeToReachOne > dataList[0].timeCode)
             {
-                Instantiate(circle, dataList[0].position, Quaternion.identity);
+                Vector3 convertPos = Vector3.zero;
+                convertPos.y = 4 - (dataList[0].position.y * 0.020833f);
+                convertPos.x = -7 + (dataList[0].position.x * 0.029296875f);
+                Instantiate(circle, convertPos, Quaternion.identity, ParentTransform);
                 dataList.RemoveAt(0);
             }
         }
@@ -73,7 +80,10 @@ public class Reader : MonoBehaviour
         currentTime = currentTime - 2;
         if (dataList.Count > 0 && currentTime >= dataList[0].timeCode - timeToReachOne)
         {
-            Instantiate(circle, dataList[0].position, Quaternion.identity);
+            Vector3 convertPos = Vector3.zero;
+            convertPos.y = 4 - (dataList[0].position.y * 0.020833f);
+            convertPos.x = -7 + (dataList[0].position.x * 0.029296875f);
+            Instantiate(circle, convertPos, Quaternion.identity, ParentTransform);
             dataList.RemoveAt(0);
         }
     }
@@ -81,7 +91,7 @@ public class Reader : MonoBehaviour
     {
         if (!File.Exists(filePath))
         {
-            UnityEngine.Debug.Log("Fichier introuvable : " + filePath);
+            Debug.LogError("Fichier introuvable : " + filePath);
             return;
         }
 
@@ -93,40 +103,38 @@ public class Reader : MonoBehaviour
             {
                 if (string.IsNullOrWhiteSpace(line)) continue;
 
-                string[] values = line.Split(';'); // Séparer les données par ";"
+                string[] values = line.Split(';');
 
-                if (values.Length < 4)
+                if (values.Length != 3)
                 {
-                    UnityEngine.Debug.LogWarning("Ligne mal formatée : " + line);
+                    Debug.LogWarning("Ligne mal formatée : " + line);
                     continue;
                 }
 
                 try
                 {
-                    // Utilisation de CultureInfo pour interpréter les virgules comme séparateurs décimaux
                     var culture = CultureInfo.GetCultureInfo("fr-FR");
 
-                    float timeCode = float.Parse(values[0].Trim(), culture);
-                    float x = float.Parse(values[1].Trim(), culture);
-                    float y = float.Parse(values[2].Trim(), culture);
-                    float z = float.Parse(values[3].Trim(), culture);
+                    float x = float.Parse(values[0].Trim(), culture);
+                    float y = float.Parse(values[1].Trim(), culture);
+                    float timeCode = float.Parse(values[2].Trim(), culture);
 
-                    Vector3 position = new Vector3(x, y, z);
-                    PositionData data = new PositionData(timeCode, position);
+                    Vector3 position = new Vector3(x, y, 0);
+                    PositionData data = new PositionData(timeCode * 0.001f, position);
 
                     dataList.Add(data);
                 }
                 catch (FormatException ex)
                 {
-                    UnityEngine.Debug.LogError("Erreur de formatage sur la ligne : " + line + " | " + ex.Message);
+                    Debug.LogError("Erreur de formatage sur la ligne : " + line + " | " + ex.Message);
                 }
             }
 
-            UnityEngine.Debug.Log("Données lues : " + dataList.Count + " entrées.");
+            Debug.Log("Données lues : " + dataList.Count + " entrées.");
         }
         catch (Exception ex)
         {
-            UnityEngine.Debug.LogError("Erreur lors de la lecture du fichier : " + filePath + " | " + ex.Message);
+            Debug.LogError("Erreur lors de la lecture du fichier : " + filePath + " | " + ex.Message);
         }
     }
     void DebugCountTimeBetweenBeat()

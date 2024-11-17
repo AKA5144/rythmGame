@@ -373,11 +373,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba43986d9fce634984d19f0e9c3231f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  filePath: Assets/Maps/CTYPE/Info.txt
+  filePath: Assets/Maps/Slider/Info.txt
   bpm: 149.3
   fps: 0
   AR: 4
   music: {fileID: 631492716}
+  ParentTransform: {fileID: 0}
+  offset: 0
   circle: {fileID: 3641050739667402851, guid: 0cac26b05bbe81d438a6b2d043782128, type: 3}
 --- !u!4 &631492714
 Transform:
@@ -498,7 +500,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 631492712}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d4b05e1a20207c049874119036a3b48a, type: 3}
   m_Name: 

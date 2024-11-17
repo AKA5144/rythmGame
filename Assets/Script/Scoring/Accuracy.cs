@@ -42,7 +42,7 @@ public class Accuracy : MonoBehaviour
         {
             InitiateDestroy(0);
         }
-        AutoPlay();
+      //  AutoPlay();
     }
 
     public void AutoPlay()
