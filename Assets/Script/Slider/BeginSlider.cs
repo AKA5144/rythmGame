@@ -34,6 +34,12 @@ public class BeginSlider : MonoBehaviour
     void Start()
     {
         currentTravel = 1;
+        if (currentTravel <= totalTravel)
+        {
+            lineRenderer.material.color = Color.yellow;
+            if (currentTravel == totalTravel)
+                lineRenderer.material.color = Color.green;
+        }
         direction = 1;
         AccuracyGo.SetActive(false);
         accuracyRenderer = AccuracyGo.GetComponent<SpriteRenderer>();
@@ -75,6 +81,9 @@ public class BeginSlider : MonoBehaviour
                 progress = 0f;
                 if (currentTravel <= totalTravel)
                 {
+                    lineRenderer.material.color = Color.yellow;
+                    if (currentTravel == totalTravel)
+                        lineRenderer.material.color = Color.green;
                     if (direction > 0)
                     {
                         currentSegment++;
@@ -90,7 +99,7 @@ public class BeginSlider : MonoBehaviour
                         if (currentSegment <= 0 && currentSegment < lineRenderer.positionCount)
                         {
                             direction = 1;
-                        currentTravel++;
+                            currentTravel++;
                         }
                     }
                 }
@@ -100,7 +109,7 @@ public class BeginSlider : MonoBehaviour
                     Vector3 temp = CircleToMove.transform.position;
                     temp.y = temp.y + CircleToMove.GetComponent<SpriteRenderer>().bounds.size.y / 2;
                     AccuracyGo.transform.position = temp;
-                      isAtEnd = true;
+                    isAtEnd = true;
                 }
             }
         }
