@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Globalization;
 using System;
+using UnityEngine.SceneManagement;
 
 public class Reader : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class Reader : MonoBehaviour
     private float lastBeatTime = 0f;
     private float timeToReachOne;
     private float playOffsetMap;
+    private float timerEnd;
 
     public enum ObjectType
     {
@@ -47,6 +49,7 @@ public class Reader : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        playOffsetMap = 0;
         playOffsetMap = -2;
         SetTimeBetweenBeat();
         lastBeatTime = Time.time;
@@ -96,7 +99,7 @@ public class Reader : MonoBehaviour
         else
         {
             music.StartSong();
-            PlayMap();
+            PlayMap();          
         }
     }
 
@@ -131,6 +134,19 @@ public class Reader : MonoBehaviour
                 }
             }
             dataList.RemoveAt(0);
+        }
+        EndMap();
+    }
+    void EndMap()
+    {
+        
+        if (dataList.Count <= 0 && ParentTransform.childCount <= 0)
+        {
+            timerEnd += Time.deltaTime;
+            if(timerEnd >= 2f)
+            {
+                SceneManager.LoadScene("Scenes/Scoreboard");
+            }
         }
     }
     void ReadDataFromFile()
