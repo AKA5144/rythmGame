@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using static MapReader;
 
-public class Reader : MonoBehaviour
+public class MapPlayer : MonoBehaviour
 {
     public string filePath = "Assets/Maps/Test/test.txt";
     public float bpm;
