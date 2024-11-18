@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static MapReader;
 
 public class MapPlayer : MonoBehaviour
@@ -40,7 +40,7 @@ public class MapPlayer : MonoBehaviour
         timeBetweenBeat = 60f / bpm;
     }
 
-    void PlayData(ref PositionData positionData)
+    void PlayPositionData(PositionData positionData)
     {
         Vector3 convertPos = Vector3.zero;
         convertPos.x = -5f + (positionData.position.x * 0.029296875f);
@@ -60,7 +60,7 @@ public class MapPlayer : MonoBehaviour
             {
                 float px = -7.5f + (point.x * 0.030078125f);
                 float py = 3.7f - (point.y * 0.0200520833f);
-                Instantiate(SliderPoint, new Vector3(px, py, 0), Quaternion.identity, pointsParent);
+                Instantiate(SliderPoint, new Vector2(px, py), Quaternion.identity, pointsParent);
             }
         }
     }
@@ -72,78 +72,31 @@ public class MapPlayer : MonoBehaviour
             playOffsetMap += Time.deltaTime;
             if (dataList.Count > 0 && playOffsetMap + timeToReachOne > dataList[0].timeCode)
             {
-                Vector3 convertPos = Vector3.zero;
-                convertPos.x = -5f + (dataList[0].position.x * 0.029296875f);
-                convertPos.y = 7f - (dataList[0].position.y * 0.0205729167f);
-                convertPos.z = 1f;
-                if (dataList[0].objectType == ObjectType.Circle)
-                {
-                    GameObject circleInstance = Instantiate(Circle, Vector3.zero, Quaternion.identity, ParentTransform);
-                    circleInstance.transform.localPosition = convertPos;
-                }
-                else if (dataList[0].objectType == ObjectType.Slider)
-                {
-                    GameObject sliderInstance = Instantiate(Slider, Vector3.zero, Quaternion.identity, ParentTransform);
-
-                    Transform pointsParent = sliderInstance.transform.Find("Point");
-                    foreach (var point in dataList[0].sliderPoints)
-                    {
-                        float px = -7.5f + (point.x * 0.030078125f);
-                        float py = 3.7f - (point.y * 0.0200520833f);
-                        Instantiate(SliderPoint, new Vector2(px, py), Quaternion.identity, pointsParent);
-                    }
-                }
+                PlayPositionData(dataList[0]);
                 dataList.RemoveAt(0);
             }
         }
         else
         {
             music.StartSong();
-            PlayMap();          
-        }
-    }
 
-    void PlayMap()
-    {
-        float currentTime = Time.time;
-        currentTime = currentTime - 2;
-        if (dataList.Count > 0 && currentTime >= dataList[0].timeCode - timeToReachOne)
-        {
-            Vector3 convertPos = Vector3.zero;
-            convertPos.x = -5 + (dataList[0].position.x * 0.029296875f);
-            convertPos.y = 7 - (dataList[0].position.y * 0.0205729167f);
-            convertPos.z = 1;
-            if (dataList[0].objectType == ObjectType.Circle)
+            float currentTime = Time.time;
+            currentTime = currentTime - 2;
+            if (dataList.Count > 0 && currentTime >= dataList[0].timeCode - timeToReachOne)
             {
-                GameObject circleInstance = Instantiate(Circle, Vector3.zero, Quaternion.identity, ParentTransform);
-                circleInstance.transform.localPosition = convertPos;
+                PlayPositionData(dataList[0]);
+                dataList.RemoveAt(0);
             }
-            else if (dataList[0].objectType == ObjectType.Slider)
-            {
-                GameObject sliderInstance = Instantiate(Slider, Vector3.zero, Quaternion.identity, ParentTransform);
-
-                Transform pointsParent = sliderInstance.transform.Find("Point");
-                foreach (var point in dataList[0].sliderPoints)
-                {
-                    float px = -7.5f + (point.x * 0.030078125f);
-                    float py = 3.7f - (point.y * 0.0200520833f);
-                    Vector3 globalPosition = new Vector2(px, py);
-                    GameObject pointInstance = Instantiate(SliderPoint, globalPosition, Quaternion.identity, pointsParent);
-                    pointInstance.transform.localPosition = globalPosition;
-
-                }
-            }
-            dataList.RemoveAt(0);
+            EndMap();
         }
-        EndMap();
     }
     void EndMap()
     {
-        
+
         if (dataList.Count <= 0 && ParentTransform.childCount <= 0)
         {
             timerEnd += Time.deltaTime;
-            if(timerEnd >= 2f)
+            if (timerEnd >= 2f)
             {
                 SceneManager.LoadScene("Scenes/Scoreboard");
             }
@@ -159,12 +112,11 @@ public class MapPlayer : MonoBehaviour
             float currentTime = Time.time;
             float timeSinceLastBeat = currentTime - lastBeatTime;
 
-            UnityEngine.Debug.Log("Time since last beat: " + timeSinceLastBeat + " seconds");
+            Debug.Log("Time since last beat: " + timeSinceLastBeat + " seconds");
 
             lastBeatTime = currentTime;
 
             timeAccumulator -= timeBetweenBeat;
         }
     }
-
 }
