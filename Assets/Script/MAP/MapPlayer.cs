@@ -87,7 +87,24 @@ public class MapPlayer : MonoBehaviour
                 PlayPositionData(dataList[0]);
                 dataList.RemoveAt(0);
             }
+<<<<<<< Updated upstream
             EndMap();
+=======
+            else if (dataList[0].objectType == ObjectType.Slider)
+            {
+                GameObject sliderInstance = Instantiate(Slider, Vector3.zero, Quaternion.identity, ParentTransform);
+
+                Transform pointsParent = sliderInstance.transform.Find("Point");
+                foreach (var point in dataList[0].sliderPoints)
+                {
+                    float px = -7.5f + (point.x * 0.030078125f);
+                    float py = 3.7f - (point.y * 0.0200520833f);
+                    Instantiate(SliderPoint, new Vector2(px, py), Quaternion.identity, pointsParent);
+
+                }
+            }
+            dataList.RemoveAt(0);
+>>>>>>> Stashed changes
         }
     }
     void EndMap()

@@ -26,9 +26,12 @@ public class BeginSlider : MonoBehaviour
     private int currentSegment = 0;
     private float progress = 0f;
 
+    private int direction;
+
 
     void Start()
     {
+        direction = 1;
         accuracyRenderer = AccuracyGo.GetComponent<SpriteRenderer>();
         initPosYAccuracy = AccuracyGo.transform.position.y;
     }
@@ -57,7 +60,7 @@ public class BeginSlider : MonoBehaviour
         if (lineRenderer != null && lineRenderer.positionCount > 1 && CircleToMove != null && !isAtEnd && isClicked)
         {
             Vector3 startPosition = lineRenderer.GetPosition(currentSegment);
-            Vector3 endPosition = lineRenderer.GetPosition(currentSegment + 1);
+            Vector3 endPosition = lineRenderer.GetPosition(currentSegment + direction);
 
             progress += speed * Time.deltaTime / Vector3.Distance(startPosition, endPosition);
 
@@ -66,15 +69,25 @@ public class BeginSlider : MonoBehaviour
             if (progress >= 1f)
             {
                 progress = 0f;
-                currentSegment++;
-
-                if (currentSegment >= lineRenderer.positionCount - 1)
+                if (direction > 0)
                 {
-                    initPosYAccuracy = CircleToMove.transform.position.y;
-                    Vector3 temp = CircleToMove.transform.position;
-                    temp.y = temp.y + CircleToMove.GetComponent<SpriteRenderer>().bounds.size.y / 2;
-                    AccuracyGo.transform.position = temp;
-                    isAtEnd = true;
+                    currentSegment++;
+                    if (currentSegment >= lineRenderer.positionCount - 1 && currentSegment < lineRenderer.positionCount)
+                    {
+
+                      /*  initPosYAccuracy = CircleToMove.transform.position.y;
+                        Vector3 temp = CircleToMove.transform.position;
+                        temp.y = temp.y + CircleToMove.GetComponent<SpriteRenderer>().bounds.size.y / 2;
+                        AccuracyGo.transform.position = temp;
+                        //  isAtEnd = true;*/
+                    }
+                }
+                else if(direction < 0)
+                {
+                    currentSegment--;
+                    if (currentSegment <= 0 && currentSegment < lineRenderer.positionCount)
+                    {
+                    }
                 }
             }
         }
