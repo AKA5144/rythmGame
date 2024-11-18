@@ -14,6 +14,7 @@ public class BeginSlider : MonoBehaviour
     public FadingOutline fading;
     [SerializeField] private List<Sprite> AccSprite;
     public GameObject AccuracyGo;
+    public int totalTravel;
 
     private int currentPointIndex = 0;
     private Vector3 targetPosition;
@@ -22,6 +23,7 @@ public class BeginSlider : MonoBehaviour
     private SpriteRenderer accuracyRenderer;
     private float initPosYAccuracy;
     private bool isAtEnd = false;
+    private int currentTravel;
 
     private int currentSegment = 0;
     private float progress = 0f;
@@ -31,6 +33,7 @@ public class BeginSlider : MonoBehaviour
 
     void Start()
     {
+        currentTravel = 1;
         direction = 1;
         accuracyRenderer = AccuracyGo.GetComponent<SpriteRenderer>();
         initPosYAccuracy = AccuracyGo.transform.position.y;
@@ -69,25 +72,36 @@ public class BeginSlider : MonoBehaviour
             if (progress >= 1f)
             {
                 progress = 0f;
-                if (direction > 0)
+                if (currentTravel < totalTravel)
                 {
-                    currentSegment++;
-                    if (currentSegment >= lineRenderer.positionCount - 1 && currentSegment < lineRenderer.positionCount)
+                    if (direction > 0)
                     {
+                        currentSegment++;
+                        if (currentSegment >= lineRenderer.positionCount - 1 && currentSegment < lineRenderer.positionCount)
+                        {
+                            direction = -1;
+                            currentTravel++;
+                        }
+                    }
+                    else if (direction < 0)
+                    {
+                        currentSegment--;
+                        currentTravel++;
+                        if (currentSegment <= 0 && currentSegment < lineRenderer.positionCount)
+                        {
+                            direction = 1;
 
-                      /*  initPosYAccuracy = CircleToMove.transform.position.y;
-                        Vector3 temp = CircleToMove.transform.position;
-                        temp.y = temp.y + CircleToMove.GetComponent<SpriteRenderer>().bounds.size.y / 2;
-                        AccuracyGo.transform.position = temp;
-                        //  isAtEnd = true;*/
+
+                        }
                     }
                 }
-                else if(direction < 0)
+                else
                 {
-                    currentSegment--;
-                    if (currentSegment <= 0 && currentSegment < lineRenderer.positionCount)
-                    {
-                    }
+                    initPosYAccuracy = CircleToMove.transform.position.y;
+                    Vector3 temp = CircleToMove.transform.position;
+                    temp.y = temp.y + CircleToMove.GetComponent<SpriteRenderer>().bounds.size.y / 2;
+                    AccuracyGo.transform.position = temp;
+                      isAtEnd = true;
                 }
             }
         }
