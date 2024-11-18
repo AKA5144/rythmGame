@@ -193,12 +193,12 @@ public class Reader : MonoBehaviour
                                 }
                                 catch (FormatException ex)
                                 {
-                                    //Debug.LogError($"Erreur lors du parsing du point '{pointPair}' : {ex.Message}");
+                                    Debug.LogError("Erreur lors du parsing du point " + pointPair);
                                 }
                             }
                             else
                             {
-                                //Debug.LogWarning($"Point mal formaté : {pointPair}");
+                                Debug.LogWarning("Point mal formaté : " + pointPair);
                             }
                         }
                     }
@@ -209,12 +209,10 @@ public class Reader : MonoBehaviour
                 }
                 catch (FormatException ex)
                 {
-                   // Debug.LogError($"Erreur de formatage sur la ligne {lineNumber} : {line} | {ex.Message}");
+                   Debug.LogError($"Erreur de formatage sur la ligne {lineNumber} : {line} | {ex.Message}");
                 }
             }
 
-
-           // Debug.Log("Données lues : " + dataList.Count + " entrées.");
         }
         catch (Exception ex)
         {
