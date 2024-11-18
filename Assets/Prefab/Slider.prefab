@@ -280,7 +280,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lineRenderer: {fileID: 3586641775578118946}
-  speed: 10
+  speed: 15
   CircleToMove: {fileID: 4580894694012060787}
   Outline: {fileID: 1495013525816743183}
   OutlineCircle: {fileID: 1495013525816743183}
@@ -291,6 +291,7 @@ MonoBehaviour:
   - {fileID: 5060403817557101333, guid: 18020d69cf703db408769f687a911401, type: 3}
   - {fileID: 5920072311633242221, guid: d281ef9901ef3eb4ba2d142220cb388f, type: 3}
   AccuracyGo: {fileID: 198974869446613388}
+  totalTravel: 0
 --- !u!114 &5160826010791210395
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class PlayMusic : MonoBehaviour
 {
-    public AudioSource audioSource;
+    static public AudioSource audioSource;
     private bool MusicPlayed = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+       
     }
     public void StartSong()
     {

@@ -30,7 +30,9 @@ public class MapPlayer : MonoBehaviour
         playOffsetMap = -2f;
         SetTimeBetweenBeat();
         lastBeatTime = Time.time;
-        dataList = ReadDataFromFile(filePath);
+        MapReader.mapPath = new string("Assets/Maps/" + MapReader.mapPath);
+        dataList = ReadDataFromFile(MapReader.mapPath + "/Info.txt");
+       // dataList = ReadDataFromFile(filePath);
         timeToReachOne = (2.5f - 1f) / (AR * 0.5f);
         timeToReachOne = timeToReachOne - offset;
     }
@@ -54,7 +56,7 @@ public class MapPlayer : MonoBehaviour
         else if (positionData.objectType == ObjectType.Slider)
         {
             GameObject sliderInstance = Instantiate(Slider, Vector3.zero, Quaternion.identity, ParentTransform);
-
+            sliderInstance.GetComponent<BeginSlider>().totalTravel = positionData.repeatCount;
             Transform pointsParent = sliderInstance.transform.Find("Point");
             foreach (var point in positionData.sliderPoints)
             {
@@ -78,10 +80,10 @@ public class MapPlayer : MonoBehaviour
         }
         else
         {
-            music.StartSong();
+            KeepSong.instance.PlayAudio();
 
-            float currentTime = Time.time;
-            currentTime = currentTime - 2;
+            float currentTime = Time.timeSinceLevelLoad;
+            currentTime = currentTime - 2;  
             if (dataList.Count > 0 && currentTime >= dataList[0].timeCode - timeToReachOne)
             {
                 PlayPositionData(dataList[0]);
@@ -103,7 +105,7 @@ public class MapPlayer : MonoBehaviour
         }
     }
 
-    void DebugCountTimeBetweenBeat()
+   /* void DebugCountTimeBetweenBeat()
     {
         timeAccumulator += Time.deltaTime;
 
@@ -118,5 +120,5 @@ public class MapPlayer : MonoBehaviour
 
             timeAccumulator -= timeBetweenBeat;
         }
-    }
+    }*/
 }

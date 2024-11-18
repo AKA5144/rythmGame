@@ -9,7 +9,7 @@ static public class MapReader
 {
     // culture info used for maps
     static public CultureInfo cultureInfo = CultureInfo.GetCultureInfo("fr-FR");
-
+    static public string mapPath;
     public enum ObjectType
     {
         Circle,
@@ -21,12 +21,14 @@ static public class MapReader
         public Vector3 position;
         public ObjectType objectType;
         public List<Vector3> sliderPoints;
-        public PositionData(float timeCode, Vector3 position, ObjectType objectType, List<Vector3> sliderPoints = null)
+        public int repeatCount;
+        public PositionData(float timeCode, Vector3 position, ObjectType objectType, List<Vector3> sliderPoints = null, int repeatCount = 1)
         {
             this.timeCode = timeCode;
             this.position = position;
             this.objectType = objectType;
             this.sliderPoints = sliderPoints ?? new List<Vector3>();
+            this.repeatCount = repeatCount;
         }
     }
 
@@ -45,7 +47,11 @@ static public class MapReader
 
     static public PositionData CreateSlider(string[] datas)
     {
-        Vector3 position = ParseCoords(datas);
+        Vector3 position = new Vector2(
+            float.Parse(datas[0].Trim(), cultureInfo),
+            float.Parse(datas[1].Trim(), cultureInfo)
+        );
+
         float timeCode = float.Parse(datas[2].Trim(), cultureInfo);
 
         List<Vector3> sliderPoints = new List<Vector3>();
@@ -53,10 +59,10 @@ static public class MapReader
         string[] pointPairs = pointsString.Split('|');
 
         sliderPoints.Add(position);
+
         foreach (var pointPair in pointPairs)
         {
             string[] coords = pointPair.Split(':');
-
             if (coords.Length != 2)
             {
                 Debug.LogWarning("Point mal formaté : " + pointPair);
@@ -66,7 +72,6 @@ static public class MapReader
             try
             {
                 sliderPoints.Add(ParseCoords(coords));
-
                 Debug.Log($"Point ajouté : ({sliderPoints.Last().x}, {sliderPoints.Last().y})");
             }
             catch (FormatException _)
@@ -74,9 +79,17 @@ static public class MapReader
                 Debug.LogError("Erreur lors du parsing du point " + pointPair);
             }
         }
-
-        return new PositionData(timeCode * 0.001f, position, ObjectType.Slider, sliderPoints);
+        int repeatCount = 1;
+        if (datas.Length > 4)
+        {
+            if (!int.TryParse(datas[4].Trim(), out repeatCount))
+            {
+                repeatCount = 1;
+            }
+        }
+        return new PositionData(timeCode * 0.001f, position, ObjectType.Slider, sliderPoints, repeatCount);
     }
+
 
     static public PositionData ParseStringValues(string[] datas)
     {
@@ -115,7 +128,7 @@ static public class MapReader
             {
                 if (string.IsNullOrWhiteSpace(lines[i])) continue;
 
-                positionDatas.Add(ParseStringValues(lines[i].Split(';')));
+                positionDatas.Add(ParseStringValues(lines[i].Split(',')));
             }
 
         }

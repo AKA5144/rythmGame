@@ -35,6 +35,7 @@ public class BeginSlider : MonoBehaviour
     {
         currentTravel = 1;
         direction = 1;
+        AccuracyGo.SetActive(false);
         accuracyRenderer = AccuracyGo.GetComponent<SpriteRenderer>();
         initPosYAccuracy = AccuracyGo.transform.position.y;
     }
@@ -51,7 +52,7 @@ public class BeginSlider : MonoBehaviour
     {
         if (isMoving && isClicked)
         {
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.V) || Input.GetKey(KeyCode.N))
             {
                 //  Debug.Log("good");
             }
@@ -72,7 +73,7 @@ public class BeginSlider : MonoBehaviour
             if (progress >= 1f)
             {
                 progress = 0f;
-                if (currentTravel < totalTravel)
+                if (currentTravel <= totalTravel)
                 {
                     if (direction > 0)
                     {
@@ -86,12 +87,10 @@ public class BeginSlider : MonoBehaviour
                     else if (direction < 0)
                     {
                         currentSegment--;
-                        currentTravel++;
                         if (currentSegment <= 0 && currentSegment < lineRenderer.positionCount)
                         {
                             direction = 1;
-
-
+                        currentTravel++;
                         }
                     }
                 }
@@ -108,6 +107,7 @@ public class BeginSlider : MonoBehaviour
 
         if (isAtEnd)
         {
+            AccuracyGo.SetActive(true);
             isMoving = false;
             AccuracyAnimation();
         }
