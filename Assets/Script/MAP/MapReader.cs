@@ -72,10 +72,10 @@ static public class MapReader
             try
             {
                 sliderPoints.Add(ParseCoords(coords));
-                Debug.Log($"Point ajouté : ({sliderPoints.Last().x}, {sliderPoints.Last().y})");
+              //  Debug.Log($"Point ajouté : ({sliderPoints.Last().x}, {sliderPoints.Last().y})");
             }
             catch (FormatException _)
-            {
+            { 
                 Debug.LogError("Erreur lors du parsing du point " + pointPair);
             }
         }

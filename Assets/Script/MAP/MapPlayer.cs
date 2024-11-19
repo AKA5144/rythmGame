@@ -35,9 +35,15 @@ public class MapPlayer : MonoBehaviour
         lastBeatTime = Time.time;
         MapReader.mapPath = new string("Assets/Maps/" + MapReader.mapPath);
         dataList = ReadDataFromFile(MapReader.mapPath + "/Info.txt");
-        // dataList = ReadDataFromFile(filePath);
+        //dataList = ReadDataFromFile(filePath);
         timeToReachOne = (2.5f - 1f) / (AR * 0.5f);
         timeToReachOne = timeToReachOne - offset;
+        ScoringManager.accuracy = 100;
+        ScoringManager.score  = 0;
+        ScoringManager.miss = 0;
+        ScoringManager.Bad = 0;
+        ScoringManager.Good = 0;
+        ScoringManager.Perfect = 0;
     }
 
     void SetTimeBetweenBeat()

@@ -165,9 +165,37 @@ public class BeginSlider : MonoBehaviour
     }
     private void InitiateDestroy(int index)
     {
+        switch (index)
+        {
+            case 0:
+                ScoringManager.miss++;
+                break;
+            case 1:
+                ScoringManager.Bad++;
+                break;
+            case 2:
+                ScoringManager.Good++;
+                break;
+            case 3:
+                ScoringManager.Perfect++;
+                break;
+        }
+        updateAccuracy(index);
+        updateScore(index);
         isMoving = true;
         isClicked = true;
         accuracyRenderer.sprite = AccSprite[index];
+    }
+    private void updateAccuracy(int index)
+    {
+        ScoringManager.accuracy = (300 * ScoringManager.Perfect + 100 * ScoringManager.Good + 50 * ScoringManager.Bad);
+        ScoringManager.accuracy = ScoringManager.accuracy / (300 * (ScoringManager.Perfect + ScoringManager.Good + ScoringManager.Bad + ScoringManager.miss));
+        ScoringManager.accuracy = ScoringManager.accuracy / 0.01f;
+        ScoringManager.accuracy = (float)Math.Round(ScoringManager.accuracy, 2);
+    }
+    private void updateScore(int index)
+    {
+        ScoringManager.score = (300 * ScoringManager.Perfect + 100 * ScoringManager.Good + 50 * ScoringManager.Bad);
     }
     private void AccuracyAnimation()
     {
