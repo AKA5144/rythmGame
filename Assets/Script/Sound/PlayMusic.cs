@@ -11,11 +11,11 @@ public class PlayMusic : MonoBehaviour
     }
     public void StartSong()
     {
-        if (!MusicPlayed)
+       /* if (!MusicPlayed)
         {
             audioSource.Play();
             MusicPlayed = true;
-        }
+        }*/
     }
     // Update is called once per frame
     void Update()

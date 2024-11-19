@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using static MapReader;
 
@@ -19,6 +20,8 @@ public class MapPlayer : MonoBehaviour
     private float timeToReachOne;
     private float playOffsetMap;
     private float timerEnd;
+    private bool gamePause = false;
+    private bool SongStarted = false;
 
     private List<PositionData> dataList = new List<PositionData>();
     public GameObject Circle;
@@ -32,7 +35,7 @@ public class MapPlayer : MonoBehaviour
         lastBeatTime = Time.time;
         MapReader.mapPath = new string("Assets/Maps/" + MapReader.mapPath);
         dataList = ReadDataFromFile(MapReader.mapPath + "/Info.txt");
-       // dataList = ReadDataFromFile(filePath);
+        // dataList = ReadDataFromFile(filePath);
         timeToReachOne = (2.5f - 1f) / (AR * 0.5f);
         timeToReachOne = timeToReachOne - offset;
     }
@@ -71,19 +74,25 @@ public class MapPlayer : MonoBehaviour
     {
         if (playOffsetMap < 0f)
         {
-            playOffsetMap += Time.deltaTime;
-            if (dataList.Count > 0 && playOffsetMap + timeToReachOne > dataList[0].timeCode)
+            if(!gamePause)
             {
-                PlayPositionData(dataList[0]);
-                dataList.RemoveAt(0);
+                playOffsetMap += Time.deltaTime;
+                if (dataList.Count > 0 && playOffsetMap + timeToReachOne > dataList[0].timeCode)
+                {
+                    PlayPositionData(dataList[0]);
+                    dataList.RemoveAt(0);
+                }
             }
         }
         else
         {
-            KeepSong.instance.PlayAudio();
-
+            if (!SongStarted)
+            {
+                KeepSong.instance.PlayAudio();
+                SongStarted = true;
+            }
             float currentTime = Time.timeSinceLevelLoad;
-            currentTime = currentTime - 2;  
+            currentTime = currentTime - 2;
             if (dataList.Count > 0 && currentTime >= dataList[0].timeCode - timeToReachOne)
             {
                 PlayPositionData(dataList[0]);
@@ -91,6 +100,19 @@ public class MapPlayer : MonoBehaviour
             }
             EndMap();
         }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            gamePause = !gamePause;
+            if (gamePause)
+            {
+                KeepSong.instance.PauseAudio();
+            }
+            else
+            { if (SongStarted == true)
+                KeepSong.instance.PlayAudio();
+            }
+        }
+        Time.timeScale = gamePause ? 0f : 1f;
     }
     void EndMap()
     {
@@ -105,20 +127,20 @@ public class MapPlayer : MonoBehaviour
         }
     }
 
-   /* void DebugCountTimeBetweenBeat()
-    {
-        timeAccumulator += Time.deltaTime;
+    /* void DebugCountTimeBetweenBeat()
+     {
+         timeAccumulator += Time.deltaTime;
 
-        if (timeAccumulator >= timeBetweenBeat)
-        {
-            float currentTime = Time.time;
-            float timeSinceLastBeat = currentTime - lastBeatTime;
+         if (timeAccumulator >= timeBetweenBeat)
+         {
+             float currentTime = Time.time;
+             float timeSinceLastBeat = currentTime - lastBeatTime;
 
-            Debug.Log("Time since last beat: " + timeSinceLastBeat + " seconds");
+             Debug.Log("Time since last beat: " + timeSinceLastBeat + " seconds");
 
-            lastBeatTime = currentTime;
+             lastBeatTime = currentTime;
 
-            timeAccumulator -= timeBetweenBeat;
-        }
-    }*/
+             timeAccumulator -= timeBetweenBeat;
+         }
+     }*/
 }

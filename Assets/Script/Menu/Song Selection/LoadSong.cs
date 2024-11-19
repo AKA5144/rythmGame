@@ -5,6 +5,7 @@ public class LoadSong : MonoBehaviour
 {
     public void LoadSceneWithSong(string path)
     {
+        KeepSong.instance.StopAudio();
         KeepSong.instance.SetAudioClip(GetComponent<AudioSource>().clip);
         KeepSong.instance.MusicPlayed = false ;
         if (path != null || path!= " ")
@@ -21,6 +22,7 @@ public class LoadSong : MonoBehaviour
 
     public void ReturnToMenu()
     {
-        SceneManager.LoadScene("Scenes/SongSelection");
+        KeepSong.instance.PlayAudio();
+       SceneManager.LoadScene("Scenes/SongSelection");
     }
 }

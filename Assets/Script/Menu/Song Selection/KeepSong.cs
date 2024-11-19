@@ -11,7 +11,7 @@ public class KeepSong : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject); 
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -31,5 +31,19 @@ public class KeepSong : MonoBehaviour
             audioSource.Play();
             MusicPlayed = true;
         }
+    }
+
+    public void StopAudio()
+    {
+        if (MusicPlayed)
+        {
+            audioSource.Stop();
+            MusicPlayed = false;
+        }
+    }
+    public void PauseAudio()
+    {
+        audioSource.Pause();
+        MusicPlayed = false;
     }
 }
