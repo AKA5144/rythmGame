@@ -114,6 +114,11 @@ public class Accuracy : MonoBehaviour
             updateScore(index);
             circle.GetComponent<CircleCollider2D>().enabled = false;
             isClicked = true;
+            if (index != 0 && !SoundPlayed)
+            {
+                audioSource.Play();
+                SoundPlayed = true;
+            }
             accuracyRenderer.sprite = AccSprite[index];
         }
     }

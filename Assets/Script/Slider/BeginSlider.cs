@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 
 public class BeginSlider : MonoBehaviour
@@ -24,7 +25,9 @@ public class BeginSlider : MonoBehaviour
     private float initPosYAccuracy;
     private bool isAtEnd = false;
     private int currentTravel;
-
+    public AudioSource audioSource;
+    private bool SoundPlayed = false;
+    private bool SoundExitPlayed = false;
     private int currentSegment = 0;
     private float progress = 0f;
 
@@ -179,6 +182,11 @@ public class BeginSlider : MonoBehaviour
             case 3:
                 ScoringManager.Perfect++;
                 break;
+        }
+        if (index != 0 && !SoundPlayed)
+        {
+            audioSource.Play();
+            SoundPlayed = true;
         }
         updateAccuracy(index);
         updateScore(index);
