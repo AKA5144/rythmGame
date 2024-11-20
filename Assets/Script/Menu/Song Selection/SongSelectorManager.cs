@@ -21,13 +21,15 @@ public class SongSelectorManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+
         selected = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.RightArrow))
+        bg.sprite = MainSongInfo.image.sprite;
+        if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             if(selected + 1 < folderPaths.Count())
             {

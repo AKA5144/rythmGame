@@ -13,8 +13,8 @@ public class SongInfo : MonoBehaviour
     public string songName;
     void Start()
     {
+        Debug.Log(path);
         LoadRessource();
-
     }
     public void LoadRessource()
     {
