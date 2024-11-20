@@ -806,7 +806,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba43986d9fce634984d19f0e9c3231f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  filePath: Assets/Maps/EmbracedByTheFlame/Info.txt
+  filePath: 
   bpm: 152
   fps: 0
   AR: 4

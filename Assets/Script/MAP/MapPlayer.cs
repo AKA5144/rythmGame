@@ -33,7 +33,6 @@ public class MapPlayer : MonoBehaviour
         playOffsetMap = -2f;
         SetTimeBetweenBeat();
         lastBeatTime = Time.time;
-        MapReader.mapPath = new string("Assets/Maps/" + MapReader.mapPath);
         dataList = ReadDataFromFile(MapReader.mapPath + "/Info.txt");
         //dataList = ReadDataFromFile(filePath);
         timeToReachOne = (2.5f - 1f) / (AR * 0.5f);

@@ -7,7 +7,6 @@ public class KeepSong : MonoBehaviour
     public bool MusicPlayed;
     void Awake()
     {
-        MusicPlayed = false;
         if (instance == null)
         {
             instance = this;
@@ -17,6 +16,7 @@ public class KeepSong : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        MusicPlayed = false;
     }
 
     public void SetAudioClip(AudioClip newClip)

@@ -1,13 +1,14 @@
-using UnityEngine;
+ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LoadSong : MonoBehaviour
 {
-    public void LoadSceneWithSong(string path)
+    public void LoadSceneWithSong()
     {
         KeepSong.instance.StopAudio();
         KeepSong.instance.SetAudioClip(GetComponent<AudioSource>().clip);
         KeepSong.instance.MusicPlayed = false ;
+        string path = GetComponent<SongInfo>().path;
         if (path != null || path!= " ")
         {
             MapReader.mapPath = path;
@@ -22,7 +23,7 @@ public class LoadSong : MonoBehaviour
 
     public void ReturnToMenu()
     {
-        KeepSong.instance.PlayAudio();
-       SceneManager.LoadScene("Scenes/SongSelection");
+        KeepSong.instance.StopAudio();
+        SceneManager.LoadScene("Scenes/SongSelection");
     }
 }

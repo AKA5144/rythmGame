@@ -5,10 +5,9 @@ using UnityEngine;
 public class GetSongInFile : MonoBehaviour
 {
     [SerializeField] private string folderPath = "Assets/Maps";
+    [SerializeField] private SongSelectorManager manager;
 
     private int folderCount = 0;
-    private List<string> folderPaths = new List<string>();
-
     void Start()
     {
         if (Directory.Exists(folderPath))
@@ -18,11 +17,11 @@ public class GetSongInFile : MonoBehaviour
 
             foreach (string dir in directories)
             {
-                folderPaths.Add(dir.Replace("\\", "/"));
+                manager.folderPaths.Add(dir.Replace("\\", "/"));
             }
-
+            manager.RefreshSongInfo();
             Debug.Log($"Le chemin '{folderPath}' contient {folderCount} dossier(s).");
-            foreach (string path in folderPaths)
+            foreach (string path in manager.folderPaths)
             {
                 Debug.Log($"Dossier trouvé : {path}");
             }
@@ -36,9 +35,5 @@ public class GetSongInFile : MonoBehaviour
     public int GetFolderCount()
     {
         return folderCount;
-    }
-    public List<string> GetFolderPaths()
-    {
-        return folderPaths;
     }
 }
