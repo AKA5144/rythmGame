@@ -1,3 +1,5 @@
+using System.Xml.Linq;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -8,13 +10,17 @@ public class SongInfo : MonoBehaviour
     public string path;
     public AudioSource audioSource;
     public Image image;
-
+    public string songName;
     void Start()
     {
         LoadRessource();
+
     }
     public void LoadRessource()
     {
+        string[] parts = path.Split('/');
+        string lastValue = parts[parts.Length - 1];
+        songName = lastValue;
         LoadAudioClipFromResources(path + "/Song.mp3");
         LoadImageFromResources(path + "/Background.jpg");
     }
