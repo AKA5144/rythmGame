@@ -31,9 +31,9 @@ public class SongSelectorManager : MonoBehaviour
         bg.sprite = MainSongInfo.image.sprite;
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            if(selected + 1 < folderPaths.Count())
+            if (selected + 1 < folderPaths.Count())
             {
-            selected++;
+                selected++;
             }
             else
             {
@@ -58,15 +58,15 @@ public class SongSelectorManager : MonoBehaviour
     {
         MainSongInfo.audioSource.Stop();
         MainSongInfo.path = folderPaths[selected];
-           if (selected + 1 < folderPaths.Count())
-           {
-               RightSongInfo.path = folderPaths[selected + 1];
-           }
-           else
-           {
-               RightSongInfo.path = folderPaths[0];
+        if (selected + 1 < folderPaths.Count())
+        {
+            RightSongInfo.path = folderPaths[selected + 1];
+        }
+        else
+        {
+            RightSongInfo.path = folderPaths[0];
 
-           }
+        }
         if (selected - 1 >= 0)
         {
             LeftSongInfo.path = folderPaths[selected - 1];

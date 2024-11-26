@@ -10,6 +10,10 @@ public class GetSongInFile : MonoBehaviour
     private int folderCount = 0;
     void Start()
     {
+        GetSong();
+    }
+    public void GetSong()
+    {
         if (Directory.Exists(folderPath))
         {
             string[] directories = Directory.GetDirectories(folderPath);
@@ -31,9 +35,15 @@ public class GetSongInFile : MonoBehaviour
             Debug.LogError($"Le chemin spécifié '{folderPath}' n'existe pas !");
         }
     }
-
     public int GetFolderCount()
     {
         return folderCount;
+    }
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F5))
+        {
+            GetSong();
+        }
     }
 }
