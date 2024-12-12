@@ -1,34 +1,46 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.UI;
-using static System.Net.Mime.MediaTypeNames;
 
 public class ScrollbarManager : MonoBehaviour
 {
     public Scrollbar scrollbar;
     public PlayerSongManager player;
     public SongInfoEditor info;
-    public TextMeshProUGUI text;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
+    public TextMeshProUGUI text; 
 
-    }
+    private bool isDragging = false;
 
-    // Update is called once per frame
     void Update()
     {
-
-        if (player.isPlaying)
+        if (!isDragging)
         {
-            text.text = info.percent.ToString();
-            scrollbar.value = info.percent * 0.01f;
+            if (player.isPlaying)
+            {
+                text.text = $"{info.percent:F1}%";
+                scrollbar.value = info.percent * 0.01f;
+            }
         }
-        else
+    }
+
+    public void StartDrag()
+    {
+        isDragging = true;
+    }
+    public void EndDrag()
+    {
+        isDragging = false;
+        float newProgress = scrollbar.value * 100f;
+        info.setProgress(newProgress);
+        info.AudioSource.time = newProgress * info.clipLength * 0.01f;
+    }
+
+    public void OnScrollbarValueChanged()
+    {
+        if (isDragging)
         {
-            info.setProgress(scrollbar.value * 100);
-            text.text = new string(scrollbar.value * 100 + "%");
+            float newProgress = scrollbar.value * 100f;
+            text.text = $"{newProgress:F1}%";
         }
     }
 }

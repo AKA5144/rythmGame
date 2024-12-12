@@ -1,8 +1,11 @@
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class PlayerSongManager : MonoBehaviour
 {
     public AudioSource audioSource;
+    public Scrollbar scrollbar;
     [SerializeField] SongInfoEditor info;
     public bool isPlaying;
     private void Start()
@@ -34,5 +37,7 @@ public class PlayerSongManager : MonoBehaviour
             audioSource.Stop();
             isPlaying = false;
         }
+        info.progress = 0;
+        scrollbar.value = 0;
     }
 }

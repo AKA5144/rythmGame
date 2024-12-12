@@ -18,7 +18,7 @@ public class SongLenghtDisplayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        formattedTime = ConvertSecondsToTime(info.timeCode);
+        formattedTime = ConvertSecondsToTime(info.timeCode);        
         text.text = formattedTime;
     }
     string ConvertSecondsToTime(float totalSeconds)
