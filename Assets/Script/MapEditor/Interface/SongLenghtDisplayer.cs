@@ -23,11 +23,11 @@ public class SongLenghtDisplayer : MonoBehaviour
     }
     string ConvertSecondsToTime(float totalSeconds)
     {
-        int minutes = Mathf.FloorToInt(totalSeconds / 60); // Calcul des minutes
-        int seconds = Mathf.FloorToInt(totalSeconds % 60); // Calcul des secondes
-        int milliseconds = Mathf.FloorToInt((totalSeconds % 1) * 1000); // Extraction des millisecondes
+        int minutes = Mathf.FloorToInt(totalSeconds / 60);
+        int seconds = Mathf.FloorToInt(totalSeconds % 60);
+        int milliseconds = Mathf.FloorToInt((totalSeconds % 1) * 1000);
 
-        // Retourner le temps formaté mm:ss:msms
+
         return $"{minutes:D2}:{seconds:D2}:{milliseconds:D3}";
     }
 }
