@@ -1,26 +1,56 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class PlayerSongManager : MonoBehaviour
 {
+    public static PlayerSongManager Instance { get; private set; }
     public AudioSource audioSource;
     public Scrollbar scrollbar;
     [SerializeField] SongInfoEditor info;
     public bool isPlaying;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public bool IsPlaying()
+    {
+        return audioSource.isPlaying;
+    }
     private void Start()
     {
         isPlaying = false;
     }
-    public void PlaySong()
+
+    private void Update()
     {
-        if (!isPlaying)
+        if (audioSource.clip == null) return;
+
+        // Met à jour `audioSource.time` en fonction de la scrollbar, sauf si la musique joue
+        if (!audioSource.isPlaying)
         {
-            audioSource.time = info.timeCode;
-            audioSource.Play();
-            isPlaying = true;
+            audioSource.time = scrollbar.value * audioSource.clip.length;
         }
     }
+
+    public void PlaySong()
+    {
+        if (audioSource.clip == null) return;
+
+        // Joue depuis la position actuelle de la scrollbar
+        audioSource.time = scrollbar.value * audioSource.clip.length;
+        audioSource.Play();
+        isPlaying = true;
+    }
+
     public void PauseSong()
     {
         if (isPlaying)
@@ -37,7 +67,6 @@ public class PlayerSongManager : MonoBehaviour
             audioSource.Stop();
             isPlaying = false;
         }
-        info.progress = 0;
         scrollbar.value = 0;
     }
 }
