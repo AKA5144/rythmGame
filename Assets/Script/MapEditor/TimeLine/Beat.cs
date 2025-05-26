@@ -2,25 +2,25 @@
 
 public class Beat : MonoBehaviour
 {
-    public float speed = 400f; // Vitesse du beat (ajuste selon besoin)
-    private RectTransform rectTransform;
+    public float speed = 5f;
+    public Transform indicator;            
 
-    private void Start()
+    private Vector3 startLocalPos;
+
+    void Start()
     {
-        rectTransform = GetComponent<RectTransform>();
-
-        if (rectTransform == null)
-        {
-            Debug.LogError("❌ Le Beat n'a pas de RectTransform !");
-        }
+        startLocalPos = transform.localPosition;
     }
 
-    private void Update()
+    void Update()
     {
-        if (PlayerSongManager.Instance.IsPlaying()) // Vérifie si la musique joue
+        // Scroll à droite
+        transform.localPosition -= Vector3.right * speed * Time.deltaTime;
+
+        // Si dépasse l’indicateur + marge
+        if (transform.localPosition.x < indicator.localPosition.x)
         {
-            float moveAmount = speed * Time.deltaTime;
-            rectTransform.anchoredPosition -= new Vector2(moveAmount, 0);
+            transform.localPosition = startLocalPos;
         }
     }
 }
