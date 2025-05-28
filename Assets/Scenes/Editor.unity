@@ -393,10 +393,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ca3b365d28b6de428169ad6af3abe3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  metronomeSound: {fileID: 828082203}
   beatPrefab: {fileID: 483658880967457510, guid: 1ba91d2511f9bed4caf3f22147f3cc03, type: 3}
   indicator: {fileID: 518001173}
   parentTransform: {fileID: 1307574066}
-  distanceFromIndicator: 500
+  bpm: 120
+  scrollSpeed: 400
 --- !u!1 &518001172
 GameObject:
   m_ObjectHideFlags: 0

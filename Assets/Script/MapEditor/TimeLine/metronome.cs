@@ -33,7 +33,7 @@ public class metronome : MonoBehaviour
         beatInterval = 60f / bpm;
     }
 
-    void PlayTick()
+    public void PlayTick()
     {
         audioSource.PlayOneShot(metronomeTickSound);
     }
