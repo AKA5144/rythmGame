@@ -394,9 +394,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   metronomeSound: {fileID: 828082203}
+  song: {fileID: 1096594764}
   beatPrefab: {fileID: 483658880967457510, guid: 1ba91d2511f9bed4caf3f22147f3cc03, type: 3}
   indicator: {fileID: 518001173}
   parentTransform: {fileID: 1307574066}
+  canvas: {fileID: 1338883381}
   bpm: 120
   scrollSpeed: 400
 --- !u!1 &518001172

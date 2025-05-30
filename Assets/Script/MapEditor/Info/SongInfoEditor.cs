@@ -27,4 +27,9 @@ public class SongInfoEditor : MonoBehaviour
     {
         progress = value;
     }
+
+    public float GetTime()
+    {
+        return AudioSource.time;
+    }
 }
