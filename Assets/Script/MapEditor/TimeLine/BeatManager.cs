@@ -17,7 +17,7 @@ public class BeatManager : MonoBehaviour
     private float interval; // en secondes
     private float beatDistance;
 
-    private float lastTickTime = -999f;
+    private int lastBeatIndex = -1;
 
     private GameObject movingBeat;
     private List<GameObject> staticBeats = new List<GameObject>();
@@ -30,9 +30,7 @@ public class BeatManager : MonoBehaviour
 
     void Update()
     {
-        if (!song.isPlaying) return;
-
-        float songTime = song.audioSource.time();
+        float songTime = song.audioSource.time;
         float timeSinceLastBeat = songTime % interval;
 
         // Distance entre beat mobile et indicator (droite)
@@ -48,10 +46,11 @@ public class BeatManager : MonoBehaviour
             staticBeats[i].GetComponent<RectTransform>().localPosition = staticPos;
         }
 
-        // Tick quand le beat passe l'indicator
-        if (songTime - lastTickTime >= interval)
+        int currentBeatIndex = Mathf.FloorToInt(songTime / interval);
+
+        if (currentBeatIndex != lastBeatIndex)
         {
-            lastTickTime = songTime - (songTime % interval);
+            lastBeatIndex = currentBeatIndex;
             metronomeSound.PlayTick();
         }
 
