@@ -194,7 +194,7 @@ public class EditorCircleManager : MonoBehaviour
         {
            // AddCircleData(2.5f, convertPos);
         }
-        Debug.Log(convertPos);
+        //Debug.Log(convertPos);
     }
     public void AddCircleData(float timeCode, Vector2 position)
     {
@@ -230,6 +230,33 @@ public class EditorCircleManager : MonoBehaviour
         {
             return timeCode.GetHashCode() ^ position.GetHashCode();
         }
+    }
+
+    public void ReceiveData(List<MapFolderViewer.PositionTimeData> dataList)
+    {
+        ClearAllCircles(); // Nettoyage avant ajout
+
+        Debug.Log($"EditorCircleManager reçoit {dataList.Count} données");
+
+        foreach (var data in dataList)
+        {
+            float timeInSeconds = data.timecode / 1000f; // Conversion millisecondes -> secondes
+            AddCircleData(timeInSeconds, new Vector2(data.positionX, data.positionY));
+        }
+    }
+
+    public void ClearAllCircles()
+    {
+        allCirclesData.Clear();
+
+        foreach (var kvp in activeCircles)
+        {
+            if (kvp.Value != null)
+                Destroy(kvp.Value.gameObject);
+        }
+        activeCircles.Clear();
+
+        Debug.Log("Tous les cercles et données ont été supprimés.");
     }
 
     public class SliderData

@@ -75,9 +75,9 @@ public class SongSelectorManager : MonoBehaviour
         {
             LeftSongInfo.path = folderPaths[folderPaths.Count() - 1];
         }
-        MainSongInfo.LoadRessource();
-        LeftSongInfo.LoadRessource();
-        RightSongInfo.LoadRessource();
+        MainSongInfo.LoadResources();
+        LeftSongInfo.LoadResources();
+        RightSongInfo.LoadResources();
         MainSongInfo.audioSource.time = 2f;
         MainSongInfo.audioSource.Play();
         MainSongInfo.audioSource.loop = true;
