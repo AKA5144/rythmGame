@@ -164,4 +164,51 @@ public class MapFolderViewer : MonoBehaviour
             Debug.LogError($"Erreur lors de la lecture du fichier texte : {e.Message}");
         }
     }
+
+    [ContextMenu("Save circle")]
+    public void SaveCircleDataInTXT()
+    {
+        if (editorCircleManager == null)
+        {
+            Debug.LogError("EditorCircleManager non assigné !");
+            return;
+        }
+
+        var allData = editorCircleManager.GetAllCirclesData();
+
+        if (allData == null || allData.Count == 0)
+        {
+            Debug.LogWarning("Aucune donnée de cercle à sauvegarder.");
+            return;
+        }
+
+        string basePath = Path.Combine(Application.dataPath, "Maps", folderName);
+        if (!Directory.Exists(basePath))
+        {
+            Directory.CreateDirectory(basePath);
+        }
+
+        string filePath = Path.Combine(basePath, "info.txt");
+
+        try
+        {
+            using (StreamWriter writer = new StreamWriter(filePath, false))
+            {
+                foreach (var data in allData)
+                {
+                    int posXInt = Mathf.RoundToInt(data.position.x);
+                    int posYInt = Mathf.RoundToInt(data.position.y);
+                    int timeMsInt = Mathf.RoundToInt(data.timeCode * 1000f);
+                    string line = $"{posXInt},{posYInt},{timeMsInt}";
+                    writer.WriteLine(line);
+                }
+            }
+            Debug.Log($"Données sauvegardées dans {filePath}");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"Erreur lors de l'écriture dans le fichier : {e.Message}");
+        }
+    }
+
 }

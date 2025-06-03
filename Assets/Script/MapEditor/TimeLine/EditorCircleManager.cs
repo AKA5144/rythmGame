@@ -30,20 +30,20 @@ public class EditorCircleManager : MonoBehaviour
 
     public float speedSlider = 5f;
     private float timeToReachOne;
+    private GameObject lastClickedCircle;
+    private bool isDragging = false;
 
     void Start()
     {
         timeToReachOne = (2.5f - 1f) / (approachRate * 0.5f);
-       // AddSliderData(2.5f, new Vector2(68, 200), new Vector2(188, 224));
+        // AddSliderData(2.5f, new Vector2(68, 200), new Vector2(188, 224));
     }
 
     void Update()
     {
         ConvertMousePos();
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            AddCircleData(2.5f, new Vector2(32, 128));
-        }
+        DetectCircleUnderMouse();
+
         float currentTime = audioSource.time;
 
         // Gestion des cercles visibles / destruction
@@ -55,6 +55,8 @@ public class EditorCircleManager : MonoBehaviour
             {
                 GameObject go = Instantiate(circlePrefab, parentTransform);
                 EditorCircle circle = go.GetComponent<EditorCircle>();
+
+                circle.circleData = new CircleData();
                 circle.timeCode = data.timeCode;
                 circle.position = data.position;
 
@@ -64,26 +66,6 @@ public class EditorCircleManager : MonoBehaviour
             {
                 Destroy(activeCircles[data].gameObject);
                 activeCircles.Remove(data);
-            }
-        }
-
-        foreach (SliderData data in allSlidersData)
-        {
-            bool shouldBeVisible = (data.timeCode >= currentTime) && (data.timeCode - currentTime <= visibleRange);
-
-            if (shouldBeVisible && !activeSliders.ContainsKey(data))
-            {
-                GameObject go = Instantiate(SliderPrefab, parentTransform);
-                EditorSlider slider = go.GetComponent<EditorSlider>();
-                slider.timeCode = data.timeCode;
-                slider.beginPos.transform.position = new Vector3(data.begin.x, data.begin.y, 0f);
-
-                activeSliders[data] = slider;
-            }
-            else if (!shouldBeVisible && activeSliders.ContainsKey(data))
-            {
-                Destroy(activeSliders[data].gameObject);
-                activeSliders.Remove(data);
             }
         }
         // Mise à jour position & instanciation des props
@@ -98,15 +80,17 @@ public class EditorCircleManager : MonoBehaviour
             newPosition.y = indicator.localPosition.y;
 
             circle.transform.localPosition = newPosition;
-
             if (currentTime > circle.timeCode - timeToReachOne && !circle.circleSpawned)
             {
                 Vector3 convertPos = Vector3.zero;
                 convertPos.x = -5f + (circle.position.x * 0.029296875f);
                 convertPos.y = 7f - (circle.position.y * 0.0205729167f);
                 convertPos.z = 1f;
+
                 GameObject newProp = Instantiate(propsPrefab, propsParent);
                 newProp.transform.localPosition = convertPos;
+                newProp.GetComponent<ShrinkingEditorCIrcle>().circle = circle;
+
                 activeProps.Add(newProp);
                 propTimeCodes[newProp] = circle.timeCode;
 
@@ -142,18 +126,6 @@ public class EditorCircleManager : MonoBehaviour
             }
         }
 
-        foreach (var kvp in activeSliders)
-        {
-            EditorSlider slider = kvp.Value;
-            float timeUntilHit = slider.timeCode - currentTime;
-            float xOffset = timeUntilHit * scrollSpeed;
-
-            Vector3 basePosition = indicator.localPosition;
-            Vector3 newPosition = basePosition + Vector3.right * xOffset;
-            newPosition.y = indicator.localPosition.y;
-
-            slider.transform.localPosition  = newPosition;
-        }
         // Mise à jour des scales des props en fonction du temps
         for (int i = activeProps.Count - 1; i >= 0; i--)
         {
@@ -185,17 +157,132 @@ public class EditorCircleManager : MonoBehaviour
         }
     }
 
-    void ConvertMousePos()
+    public void DetectCircleUnderMouse()
     {
-        Vector2 MousePos = Input.mousePosition;
-        Vector2 convertPos = Input.mousePosition;
-        convertPos.x = -5f + (MousePos.x * 0.029296875f);
-        convertPos.y = 7f - (MousePos.y * 0.0205729167f);
+        Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        // Détection du clic initial
         if (Input.GetMouseButtonDown(0))
         {
-           // AddCircleData(2.5f, convertPos);
+            Collider2D hit = Physics2D.OverlapPoint(mouseWorldPos);
+
+            if (hit != null && hit.CompareTag("Circle"))
+            {
+                if (hit.gameObject != lastClickedCircle)
+                {
+                    // Réinitialiser l'ancien
+                    if (lastClickedCircle != null)
+                    {
+                        SpriteRenderer oldSR = lastClickedCircle.GetComponent<SpriteRenderer>();
+                        if (oldSR != null)
+                            oldSR.color = Color.white;
+                    }
+
+                    // Sélectionner le nouveau
+                    SpriteRenderer newSR = hit.GetComponent<SpriteRenderer>();
+                    if (newSR != null)
+                        newSR.color = Color.yellow;
+
+                    lastClickedCircle = hit.gameObject;
+
+                }
+
+                isDragging = true;
+            }
+            else
+            {
+                // Si on clique ailleurs, désélectionner
+                if (lastClickedCircle != null)
+                {
+                    SpriteRenderer sr = lastClickedCircle.GetComponent<SpriteRenderer>();
+                    if (sr != null)
+                        sr.color = Color.white;
+
+                    lastClickedCircle = null;
+                }
+
+                isDragging = false;
+            }
         }
-        //Debug.Log(convertPos);
+
+        // Relâchement du clic
+        if (Input.GetMouseButtonUp(0))
+        {
+            isDragging = false;
+        }
+        if (lastClickedCircle != null && Input.GetKeyDown(KeyCode.Delete))
+        {
+            // Récupérer le component EditorCircle lié
+            var shrinkingScript = lastClickedCircle.transform.parent.GetComponent<ShrinkingEditorCIrcle>();
+            if (shrinkingScript != null)
+            {
+                EditorCircle editorCircle = shrinkingScript.circle;
+
+                if (editorCircle != null)
+                {
+                    // Supprimer le CircleData correspondant
+                    CircleData targetData = null;
+                    foreach (var kvp in activeCircles)
+                    {
+                        if (kvp.Value == editorCircle)
+                        {
+                            targetData = kvp.Key;
+                            break;
+                        }
+                    }
+
+                    if (targetData != null)
+                    {
+                        allCirclesData.Remove(targetData);
+                        activeCircles.Remove(targetData);
+                    }
+
+                    // Supprimer le prop et l'EditorCircle
+                    Destroy(editorCircle.gameObject);
+                }
+
+                // Supprimer le parent (le prop)
+                Destroy(lastClickedCircle.transform.parent.gameObject);
+            }
+
+            lastClickedCircle = null;
+
+            Debug.Log("Props, EditorCircle et données supprimés !");
+        }
+        // Suivi du cercle tant qu'on maintient le clic
+        if (isDragging && lastClickedCircle != null)
+        {
+            /* Vector2 _mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+             lastClickedCircle.transform.parent.position = _mouseWorldPos;
+
+             var shrinkingScript = lastClickedCircle.transform.parent.GetComponent<ShrinkingEditorCIrcle>();
+             if (shrinkingScript != null && shrinkingScript.circle != null)
+             {
+                 shrinkingScript.circle.position = _mouseWorldPos;
+
+                 Debug.Log($"Position mise à jour : {shrinkingScript.circle.position} (Mouse World Pos : {_mouseWorldPos})");
+             }
+             else
+             {
+                 Debug.LogWarning("shrinkingScript ou shrinkingScript.circle est null !");
+             }*/
+        }
+    }
+    void ConvertMousePos()
+    {
+        Vector3 mousePos = Input.mousePosition;
+        float invertedY = Screen.height - mousePos.y;
+
+        Vector3 convertPos;
+        convertPos.x = (mousePos.x * 0.3393f) - 87.624f;
+        convertPos.y = (invertedY * 0.4819f) - 44.817f;
+        convertPos.z = 1f;
+        if (Input.GetMouseButtonDown(1))
+        {
+            //convertPos = propsParent.InverseTransformPoint(MousePos);
+            AddCircleData(audioSource.time, convertPos);
+            Debug.Log(convertPos);
+        }
     }
     public void AddCircleData(float timeCode, Vector2 position)
     {
@@ -215,23 +302,7 @@ public class EditorCircleManager : MonoBehaviour
         });
     }
 
-    private class CircleData
-    {
-        public float timeCode;
-        public Vector2 position;
 
-        public override bool Equals(object obj)
-        {
-            if (obj is CircleData other)
-                return Mathf.Approximately(timeCode, other.timeCode) && position == other.position;
-            return false;
-        }
-
-        public override int GetHashCode()
-        {
-            return timeCode.GetHashCode() ^ position.GetHashCode();
-        }
-    }
 
     public void ReceiveData(List<MapFolderViewer.PositionTimeData> dataList)
     {
@@ -264,5 +335,29 @@ public class EditorCircleManager : MonoBehaviour
     {
         public float timeCode;
         public Vector2 begin;
+    }
+    public List<CircleData> GetAllCirclesData()
+    {
+        // Retourne une copie pour éviter la modification directe
+        return new List<CircleData>(allCirclesData);
+    }
+
+}
+
+public class CircleData
+{
+    public float timeCode;
+    public Vector2 position;
+
+    public override bool Equals(object obj)
+    {
+        if (obj is CircleData other)
+            return Mathf.Approximately(timeCode, other.timeCode) && position == other.position;
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return timeCode.GetHashCode() ^ position.GetHashCode();
     }
 }

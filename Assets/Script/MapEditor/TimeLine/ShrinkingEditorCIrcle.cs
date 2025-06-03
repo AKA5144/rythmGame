@@ -3,6 +3,7 @@ using UnityEngine;
 public class ShrinkingEditorCIrcle : MonoBehaviour
 {
     [SerializeField] private Transform outlineTransform;
+    public EditorCircle circle;
 
     public void SetOutlineScale(float scale)
     {
