@@ -4,21 +4,22 @@ using UnityEngine;
 
 public class GetSongInFile : MonoBehaviour
 {
-    [SerializeField] private string folderPath = "Assets/Maps";
+    [SerializeField] private string folderPath = "Assets/Resources/Maps"; // <-- chemin corrigé
     [SerializeField] private SongSelectorManager manager;
 
     private int folderCount = 0;
+
     void Start()
     {
         GetSong();
     }
+
     public void GetSong()
     {
         if (Directory.Exists(folderPath))
         {
             string[] directories = Directory.GetDirectories(folderPath);
             folderCount = directories.Length;
-
             foreach (string dir in directories)
             {
                 manager.folderPaths.Add(dir.Replace("\\", "/"));
@@ -35,10 +36,12 @@ public class GetSongInFile : MonoBehaviour
             Debug.LogError($"Le chemin spécifié '{folderPath}' n'existe pas !");
         }
     }
+
     public int GetFolderCount()
     {
         return folderCount;
     }
+
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.F5))

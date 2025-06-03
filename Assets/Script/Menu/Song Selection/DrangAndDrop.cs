@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DrangAndDrop : MonoBehaviour
 {
-    private string fileContent = "";
+  /*  private string fileContent = "";
 
     private void OnGUI()
     {
@@ -56,5 +56,5 @@ public class DrangAndDrop : MonoBehaviour
             GUILayout.Label("File Content:");
             GUILayout.TextArea(fileContent, GUILayout.Height(200));
         }
-    }
+    }*/
 }

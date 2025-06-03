@@ -3,11 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine.UI;
-
-
-#if UNITY_EDITOR
 using UnityEditor;
-#endif
 
 public class MapFolderViewer : MonoBehaviour
 {

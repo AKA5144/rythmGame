@@ -87,9 +87,6 @@ public class NameInputController : MonoBehaviour
             Directory.CreateDirectory(lastCreatedFolderPath);
             Debug.Log($"Dossier créé : {lastCreatedFolderPath}");
 
-#if UNITY_EDITOR
-            AssetDatabase.Refresh();
-#endif
         }
         else
         {
