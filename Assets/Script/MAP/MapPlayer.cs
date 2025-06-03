@@ -52,10 +52,12 @@ public class MapPlayer : MonoBehaviour
 
     void PlayPositionData(PositionData positionData)
     {
+        Debug.Log(positionData.position);
         Vector3 convertPos = Vector3.zero;
         convertPos.x = -5f + (positionData.position.x * 0.029296875f);
         convertPos.y = 7f - (positionData.position.y * 0.0205729167f);
         convertPos.z = 1f;
+        Debug.Log(convertPos);
         if (positionData.objectType == ObjectType.Circle)
         {
             GameObject circleInstance = Instantiate(Circle, Vector3.zero, Quaternion.identity, ParentTransform);

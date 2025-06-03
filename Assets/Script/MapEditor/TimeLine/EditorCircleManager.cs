@@ -42,7 +42,7 @@ public class EditorCircleManager : MonoBehaviour
         ConvertMousePos();
         if (Input.GetKeyDown(KeyCode.E))
         {
-            AddCircleData(2.5f, new Vector2(68, 200));
+            AddCircleData(2.5f, new Vector2(32, 128));
         }
         float currentTime = audioSource.time;
 
@@ -105,7 +105,8 @@ public class EditorCircleManager : MonoBehaviour
                 convertPos.x = -5f + (circle.position.x * 0.029296875f);
                 convertPos.y = 7f - (circle.position.y * 0.0205729167f);
                 convertPos.z = 1f;
-                GameObject newProp = Instantiate(propsPrefab, convertPos, Quaternion.identity, propsParent);
+                GameObject newProp = Instantiate(propsPrefab, propsParent);
+                newProp.transform.localPosition = convertPos;
                 activeProps.Add(newProp);
                 propTimeCodes[newProp] = circle.timeCode;
 
