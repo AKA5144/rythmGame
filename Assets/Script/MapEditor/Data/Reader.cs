@@ -188,13 +188,15 @@ public class MapFolderViewer : MonoBehaviour
             return;
         }
 
-        string basePath = Path.Combine(Application.persistentDataPath, "/Maps", folderName);
-        if (!Directory.Exists(basePath))
+        string basePath = Path.Combine(Application.persistentDataPath, "Maps");
+        string fullPath = Path.Combine(basePath, folderName);
+
+        if (!Directory.Exists(fullPath))
         {
-            Directory.CreateDirectory(basePath);
+            Directory.CreateDirectory(fullPath); // Crée le dossier complet si besoin
         }
 
-        string filePath = Path.Combine(basePath, "info.txt");
+        string filePath = Path.Combine(fullPath, "info.txt"); // <- corrigé ici
 
         try
         {
