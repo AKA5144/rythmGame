@@ -21,7 +21,6 @@ public class SongSelectorManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
         selected = 0;
     }
 
@@ -29,6 +28,7 @@ public class SongSelectorManager : MonoBehaviour
     void Update()
     {
         bg.sprite = MainSongInfo.image.sprite;
+
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             if (selected + 1 < folderPaths.Count())
@@ -58,6 +58,7 @@ public class SongSelectorManager : MonoBehaviour
     {
         MainSongInfo.audioSource.Stop();
         MainSongInfo.path = folderPaths[selected];
+
         if (selected + 1 < folderPaths.Count())
         {
             RightSongInfo.path = folderPaths[selected + 1];

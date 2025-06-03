@@ -44,7 +44,7 @@ public class NameInputController : MonoBehaviour
         {
             SceneManager.LoadScene("Scenes/SongSelection");
         }
-            if (inputPanel.activeSelf && (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)))
+        if (inputPanel.activeSelf && (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)))
         {
             string inputText = nameInputField.text.Trim();
             if (string.IsNullOrWhiteSpace(inputText))
@@ -56,7 +56,7 @@ public class NameInputController : MonoBehaviour
             CreateFolder(inputText);
             inputPanel.SetActive(false);
 
-            OpenImageFileExplorer();
+            
         }
     }
 
@@ -80,17 +80,27 @@ public class NameInputController : MonoBehaviour
     }
     private void CreateFolder(string folderName)
     {
-        lastCreatedFolderPath = Path.Combine("Assets/Maps", folderName);
-        lastCreatedFolderName = folderName;
-        if (!Directory.Exists(lastCreatedFolderPath))
-        {
-            Directory.CreateDirectory(lastCreatedFolderPath);
-            Debug.Log($"Dossier créé : {lastCreatedFolderPath}");
+        // Chemin vers le dossier "maps" dans persistentDataPath
+        string mapsFolderPath = Path.Combine(Application.persistentDataPath, "maps");
 
+        // S'assurer que le dossier "maps" existe
+        if (!Directory.Exists(mapsFolderPath))
+        {
+            Directory.CreateDirectory(mapsFolderPath);
+        }
+        lastCreatedFolderName = folderName;
+        // Créer le dossier spécifique demandé
+        string newFolderPath = Path.Combine(mapsFolderPath, folderName);
+        if (!Directory.Exists(newFolderPath))
+        {
+            Directory.CreateDirectory(newFolderPath);
+            lastCreatedFolderPath = newFolderPath;
+            Debug.Log("Dossier créé : " + newFolderPath);
+            OpenImageFileExplorer();
         }
         else
         {
-            Debug.LogWarning($"Le dossier existe déjà : {lastCreatedFolderPath}");
+            Debug.Log("Le dossier existe déjà : " + newFolderPath);
         }
     }
 

@@ -1,9 +1,7 @@
-using System.Linq;
-using TMPro;
-using UnityEditor;
+﻿using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
-using System.IO;
+using UnityEngine.Networking;
 
 public class SongInfo : MonoBehaviour
 {
@@ -20,24 +18,29 @@ public class SongInfo : MonoBehaviour
         LoadResources();
     }
 
+    public void ReloadSong()
+    {
+        LoadResources();
+    }
+
     public void LoadResources()
     {
         string[] parts = path.Split('/');
-        string lastValue = parts[parts.Length - 1];
+        string lastValue = parts[parts.Length - 2]; // nom du dossier
         songName = lastValue;
 
         string audioPath = GetFileWithExtensions(path, "Song", audioExtensions);
         string imagePath = GetFileWithExtensions(path, "Background", imageExtensions);
 
         if (audioPath != null)
-            LoadAudioClipFromResources(audioPath);
+            LoadAudioFromFile(audioPath);
         else
-            Debug.LogWarning("Fichier audio non trouv�.");
+            Debug.LogWarning("Fichier audio non trouvé.");
 
         if (imagePath != null)
-            LoadImageFromResources(imagePath);
+            LoadImageFromFile(imagePath);
         else
-            Debug.LogWarning("Fichier image non trouv�.");
+            Debug.LogWarning("Fichier image non trouvé.");
     }
 
     private string GetFileWithExtensions(string folderPath, string baseName, string[] allowedExtensions)
@@ -51,13 +54,38 @@ public class SongInfo : MonoBehaviour
         return null;
     }
 
-    private void LoadAudioClipFromResources(string resourcePath)
+    private void LoadAudioFromFile(string fullPath)
     {
-        audioSource.clip = AssetDatabase.LoadAssetAtPath<AudioClip>(resourcePath);
+        string url = "file://" + fullPath;
+        using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(url, AudioType.UNKNOWN))
+        {
+            var operation = www.SendWebRequest();
+            while (!operation.isDone) { } // <-- attend (⚠ blocant)
+
+#if UNITY_2020_1_OR_NEWER
+            if (www.result != UnityWebRequest.Result.Success)
+#else
+            if (www.isNetworkError || www.isHttpError)
+#endif
+            {
+                Debug.LogError($"Erreur lors du chargement de l'audio : {www.error}");
+            }
+            else
+            {
+                AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
+                audioSource.clip = clip;
+            
+            }
+        }
     }
 
-    private void LoadImageFromResources(string resourcePath)
+    private void LoadImageFromFile(string fullPath)
     {
-        image.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(resourcePath);
+        byte[] fileData = File.ReadAllBytes(fullPath);
+        Texture2D tex = new Texture2D(2, 2);
+        tex.LoadImage(fileData);
+
+        Sprite loadedSprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+        image.sprite = loadedSprite;
     }
 }

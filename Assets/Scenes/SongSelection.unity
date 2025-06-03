@@ -616,7 +616,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acdc52accf89ed242b6668f0f0871b59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  folderPath: Assets/Resources/Maps
+  folderPath: /Maps
   manager: {fileID: 763129216}
 --- !u!4 &763129215
 Transform:
