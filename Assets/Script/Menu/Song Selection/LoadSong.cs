@@ -21,6 +21,12 @@ public class LoadSong : MonoBehaviour
         SceneManager.LoadScene("Scenes/Game");
     }
 
+    public void LoadEditWithSong()
+    {
+        string path = GetComponent<SongInfo>().path;
+        MapReader.mapPath = path;
+        SceneManager.LoadScene("Scenes/Editor");
+    }
     public void ReturnToMenu()
     {
         KeepSong.instance.StopAudio();

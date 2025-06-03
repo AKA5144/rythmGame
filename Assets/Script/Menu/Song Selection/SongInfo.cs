@@ -17,7 +17,6 @@ public class SongInfo : MonoBehaviour
 
     void Start()
     {
-        Debug.Log(path);
         LoadResources();
     }
 

@@ -2,6 +2,9 @@ using UnityEngine;
 using TMPro;
 using System.IO;
 using SFB; // UnityStandaloneFileBrowser
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -10,8 +13,10 @@ public class NameInputController : MonoBehaviour
 {
     public GameObject inputPanel;
     public TMP_InputField nameInputField;
-
+    public MapFolderViewer manager;
     private string lastCreatedFolderPath;
+    private string selectedFolderName = "";
+    private string lastCreatedFolderName = "";
 
     void Start()
     {
@@ -27,7 +32,19 @@ public class NameInputController : MonoBehaviour
             nameInputField.ActivateInputField();
         }
 
-        if (inputPanel.activeSelf && (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)))
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            SelectFolder();
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            manager.SaveCircleDataInTXT();
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene("Scenes/SongSelection");
+        }
+            if (inputPanel.activeSelf && (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)))
         {
             string inputText = nameInputField.text.Trim();
             if (string.IsNullOrWhiteSpace(inputText))
@@ -43,10 +60,28 @@ public class NameInputController : MonoBehaviour
         }
     }
 
+    void SelectFolder()
+    {
+        var paths = StandaloneFileBrowser.OpenFolderPanel("Choisir un dossier", "", false);
+
+        if (paths.Length > 0 && !string.IsNullOrEmpty(paths[0]))
+        {
+            string fullPath = paths[0];
+            selectedFolderName = Path.GetFileName(fullPath); // Récupère juste le nom du dossier
+            Debug.Log("Dossier sélectionné : " + selectedFolderName);
+            manager.folderName = selectedFolderName;
+            manager.LoadFirstAudioToSongManager();
+            manager.ReadAndStoreDataFromTextFile();
+        }
+        else
+        {
+            Debug.Log("Aucun dossier sélectionné.");
+        }
+    }
     private void CreateFolder(string folderName)
     {
         lastCreatedFolderPath = Path.Combine("Assets/Maps", folderName);
-
+        lastCreatedFolderName = folderName;
         if (!Directory.Exists(lastCreatedFolderPath))
         {
             Directory.CreateDirectory(lastCreatedFolderPath);
@@ -128,6 +163,9 @@ public class NameInputController : MonoBehaviour
             File.WriteAllText(infoPath, ""); // fichier vide
             Debug.Log("Fichier Info.txt vide créé.");
         }
+        manager.folderName = lastCreatedFolderName;
+        manager.LoadFirstAudioToSongManager();
+        manager.ReadAndStoreDataFromTextFile();
 
 #if UNITY_EDITOR
         AssetDatabase.Refresh();

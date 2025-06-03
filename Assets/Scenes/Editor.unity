@@ -1102,6 +1102,7 @@ MonoBehaviour:
   editorCircleManager: {fileID: 368736235}
   folderName: Test
   songManager: {fileID: 1096594764}
+  background: {fileID: 0}
 --- !u!114 &1096594767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1116,6 +1117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputPanel: {fileID: 131756475}
   nameInputField: {fileID: 131756476}
+  manager: {fileID: 1096594766}
 --- !u!1 &1242893806
 GameObject:
   m_ObjectHideFlags: 0
@@ -1151,7 +1153,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -660, y: -459}
+  m_AnchoredPosition: {x: -585, y: -459}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1242893808

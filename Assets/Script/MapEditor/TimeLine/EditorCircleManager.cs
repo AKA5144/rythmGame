@@ -326,6 +326,10 @@ public class EditorCircleManager : MonoBehaviour
             if (kvp.Value != null)
                 Destroy(kvp.Value.gameObject);
         }
+        foreach(Transform transform in propsParent)
+        {
+            Destroy(transform.gameObject);
+        }
         activeCircles.Clear();
 
         Debug.Log("Tous les cercles et données ont été supprimés.");

@@ -2,6 +2,8 @@
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEngine.UI;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -28,14 +30,28 @@ public class MapFolderViewer : MonoBehaviour
             return $"PosX: {positionX}, PosY: {positionY}, Timecode: {timecode}";
         }
     }
+
     public EditorCircleManager editorCircleManager;
     [Header("Nom du dossier dans Assets/Maps")]
-    public string folderName = "CTYPE";
+    public string folderName;
 
     [Header("AudioSource cible pour la lecture")]
     public PlayerSongManager songManager;
 
-    [ContextMenu("Charger et assigner le premier fichier audio")]
+    [SerializeField] Renderer backgroundPlaneRenderer;
+
+    public void Start()
+    {
+        Debug.Log(MapReader.mapPath);
+        string path = MapReader.mapPath;
+        string[] parts = path.Split('/');
+
+        // Récupère le dernier mot non vide
+        string lastPart = parts.LastOrDefault(part => !string.IsNullOrWhiteSpace(part));
+        folderName = lastPart;
+        LoadFirstAudioToSongManager();
+        ReadAndStoreDataFromTextFile();
+    }
     public void LoadFirstAudioToSongManager()
     {
         string basePath = "Assets/Maps";
@@ -61,7 +77,6 @@ public class MapFolderViewer : MonoBehaviour
 
         Debug.Log($"Chargement du fichier audio : {Path.GetFileName(firstAudioFile)}");
 
-#if UNITY_EDITOR
         // Charger l'AudioClip depuis le chemin relatif Assets
         string relativePath = firstAudioFile.Replace(Application.dataPath, "Assets").Replace('\\', '/');
         AudioClip clip = AssetDatabase.LoadAssetAtPath<AudioClip>(relativePath);
@@ -88,15 +103,13 @@ public class MapFolderViewer : MonoBehaviour
         {
             Debug.LogError("Référence à PlayerSongManager non assignée.");
         }
-#else
-        Debug.LogError("Chargement d'AudioClip via AssetDatabase uniquement supporté dans l'éditeur Unity.");
-#endif
+        LoadFirstImageToPlane(fullPath);
     }
+
 
     // Liste publique pour pouvoir la consulter dans l'inspecteur (optionnel)
     public List<PositionTimeData> positionsData = new List<PositionTimeData>();
 
-    [ContextMenu("Lire et enregistrer les données du fichier texte")]
     public void ReadAndStoreDataFromTextFile()
     {
         string basePath = "Assets/Maps";
@@ -165,7 +178,6 @@ public class MapFolderViewer : MonoBehaviour
         }
     }
 
-    [ContextMenu("Save circle")]
     public void SaveCircleDataInTXT()
     {
         if (editorCircleManager == null)
@@ -211,4 +223,39 @@ public class MapFolderViewer : MonoBehaviour
         }
     }
 
+    void LoadFirstImageToPlane(string fullPath)
+    {
+        string[] imageExtensions = new string[] { ".png", ".jpg", ".jpeg" };
+        string firstImageFile = Directory.GetFiles(fullPath)
+            .FirstOrDefault(file => imageExtensions.Any(ext => file.EndsWith(ext, System.StringComparison.OrdinalIgnoreCase)));
+
+        if (firstImageFile == null)
+        {
+            Debug.LogWarning("Aucune image trouvée dans le dossier.");
+            return;
+        }
+
+        Debug.Log($"Chargement de l'image : {Path.GetFileName(firstImageFile)}");
+
+        // Charge la texture en asset depuis le chemin relatif Assets
+        string relativeImagePath = firstImageFile.Replace(Application.dataPath, "Assets").Replace('\\', '/');
+        Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(relativeImagePath);
+
+        if (texture == null)
+        {
+            Debug.LogError("Impossible de charger la texture via AssetDatabase. Vérifiez le format de l'image.");
+            return;
+        }
+
+        if (backgroundPlaneRenderer != null)
+        {
+            backgroundPlaneRenderer.material.mainTexture = texture;
+            Debug.Log("Texture assignée avec succès au Plane !");
+        }
+        else
+        {
+            Debug.LogError("Référence au Renderer du Plane non assignée.");
+        }
+    }
 }
+
