@@ -7,6 +7,7 @@ public class PlayerSongManager : MonoBehaviour
     public AudioSource audioSource;
     public Scrollbar scrollbar;
     [SerializeField] SongInfoEditor info;
+
     public bool isPlaying;
 
     private void Awake()
@@ -34,7 +35,6 @@ public class PlayerSongManager : MonoBehaviour
     {
         if (audioSource.clip == null) return;
 
-        // Met à jour `audioSource.time` en fonction de la scrollbar, sauf si la musique joue
         if (!audioSource.isPlaying)
         {
             audioSource.time = scrollbar.value * audioSource.clip.length;
@@ -45,7 +45,6 @@ public class PlayerSongManager : MonoBehaviour
     {
         if (audioSource.clip == null) return;
 
-        // Joue depuis la position actuelle de la scrollbar
         audioSource.time = scrollbar.value * audioSource.clip.length;
         audioSource.Play();
         isPlaying = true;

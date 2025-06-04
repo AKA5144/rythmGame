@@ -32,6 +32,15 @@ public class ScrollbarManager : MonoBehaviour
             UpdateTimeText();
             UpdatePercentageText();
 
+            // Scroll de la souris
+            float scrollDelta = Input.mouseScrollDelta.y;
+            if (scrollDelta != 0f && !Input.GetKey(KeyCode.LeftControl))
+            {
+                float scrollSpeed = 0.02f; // Ajuste ce facteur selon la précision voulue
+                float newValue = Mathf.Clamp(scrollbar.value + scrollDelta * scrollSpeed, 0f, 1f);
+                scrollbar.value = newValue; // Cela déclenche aussi OnScrollbarValueChanged
+            }
+
             if (!isDragging)
             {
                 scrollbar.SetValueWithoutNotify(audioSource.time / audioSource.clip.length);
@@ -50,7 +59,6 @@ public class ScrollbarManager : MonoBehaviour
                 isInitialized = true;
             }
 
-            // 🔥 Sécurité : Empêcher les erreurs quand la barre est à 100%
             float newTime = value * audioSource.clip.length;
             audioSource.time = Mathf.Clamp(newTime, 0f, audioSource.clip.length - 0.01f);
 

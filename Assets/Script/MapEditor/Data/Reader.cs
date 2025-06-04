@@ -37,9 +37,9 @@ public class MapFolderViewer : MonoBehaviour
 
     [SerializeField] Renderer backgroundPlaneRenderer;
 
+    public string editorPath;
     public void Start()
     {
-        Debug.Log(MapReader.mapPath);
         string path = MapReader.mapPath;
         string[] parts = path.Split('/');
 

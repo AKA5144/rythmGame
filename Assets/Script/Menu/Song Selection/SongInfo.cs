@@ -26,7 +26,7 @@ public class SongInfo : MonoBehaviour
     public void LoadResources()
     {
         string[] parts = path.Split('/');
-        string lastValue = parts[parts.Length - 2]; // nom du dossier
+        string lastValue = parts[parts.Length - 2]; 
         songName = lastValue;
 
         string audioPath = GetFileWithExtensions(path, "Song", audioExtensions);

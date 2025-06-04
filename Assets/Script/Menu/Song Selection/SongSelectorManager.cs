@@ -80,8 +80,8 @@ public class SongSelectorManager : MonoBehaviour
         LeftSongInfo.LoadResources();
         RightSongInfo.LoadResources();
         MainSongInfo.audioSource.time = 2f;
-        MainSongInfo.audioSource.Play();
         MainSongInfo.audioSource.loop = true;
         bg.sprite = MainSongInfo.image.sprite;
+        MainSongInfo.audioSource.Play();
     }
 }

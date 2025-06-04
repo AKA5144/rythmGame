@@ -18,6 +18,7 @@ public class NameInputController : MonoBehaviour
     private string selectedFolderName = "";
     private string lastCreatedFolderName = "";
 
+    bool isCreating = false;
     void Start()
     {
         inputPanel.SetActive(false);
@@ -28,15 +29,16 @@ public class NameInputController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.N))
         {
             inputPanel.SetActive(true);
+            isCreating = true;
             nameInputField.text = "";
             nameInputField.ActivateInputField();
         }
 
-        if (Input.GetKeyDown(KeyCode.O))
+        if (Input.GetKeyDown(KeyCode.O) && !isCreating)
         {
             SelectFolder();
         }
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.S) && !isCreating)
         {
             manager.SaveCircleDataInTXT();
         }
@@ -170,6 +172,7 @@ public class NameInputController : MonoBehaviour
             File.WriteAllText(infoPath, ""); // fichier vide
             Debug.Log("Fichier Info.txt vide créé.");
         }
+        isCreating = false;
         manager.folderName = lastCreatedFolderName;
         manager.LoadFirstAudioToSongManager();
         manager.ReadAndStoreDataFromTextFile();

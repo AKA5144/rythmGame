@@ -159,6 +159,7 @@ public class EditorCircleManager : MonoBehaviour
 
     public void DetectCircleUnderMouse()
     {
+        Debug.Log("detesct");
         Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         // Détection du clic initial
         if (Input.GetMouseButtonDown(0))

@@ -21,7 +21,7 @@ public class BeatManager : MonoBehaviour
 
     private GameObject movingBeat;
     private List<GameObject> staticBeats = new List<GameObject>();
-
+    [SerializeField] GameObject bpmText;
     void Start()
     {
         UpdateBeatSpacing();
@@ -38,13 +38,28 @@ public class BeatManager : MonoBehaviour
         Vector3 movingBeatPos = indicator.localPosition + Vector3.right * offset;
         movingBeat.GetComponent<RectTransform>().localPosition = movingBeatPos;
 
+
+        if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+        {
+            bpmText.SetActive(true);
+            float scrollDelta = Input.mouseScrollDelta.y;
+            if (scrollDelta != 0f)
+            {
+                bpm += scrollDelta > 0 ? 1f : -1f;
+                bpm = Mathf.Clamp(bpm, 20f, 10000f); // Limites raisonnables
+                UpdateBeatSpacing();
+                SpawnBeats();
+            }
+        }
+        else
+            bpmText.SetActive(false);
         // Statics derrière
         for (int i = 0; i < staticBeats.Count; i++)
-        {
-            float staticOffset = offset + beatDistance * (i + 1);
-            Vector3 staticPos = indicator.localPosition + Vector3.right * staticOffset;
-            staticBeats[i].GetComponent<RectTransform>().localPosition = staticPos;
-        }
+            {
+                float staticOffset = offset + beatDistance * (i + 1);
+                Vector3 staticPos = indicator.localPosition + Vector3.right * staticOffset;
+                staticBeats[i].GetComponent<RectTransform>().localPosition = staticPos;
+            }
 
         int currentBeatIndex = Mathf.FloorToInt(songTime / interval);
 
