@@ -35,6 +35,7 @@ public class EditorCircleManager : MonoBehaviour
 
     void Start()
     {
+        ClearAllCircles();
         timeToReachOne = (2.5f - 1f) / (approachRate * 0.5f);
         // AddSliderData(2.5f, new Vector2(68, 200), new Vector2(188, 224));
     }
